@@ -57,6 +57,12 @@ brainstorming 显式分 **Phase A**（人机对齐）+ **Phase B**（ds 写 spec
 
 可大改既有 SKILL.md，删除/替换上游设计，按本 fork 的优化目标演进。
 
+### SKILL 文件与 prompt 模板一律使用英语
+
+所有 `skills/**/SKILL.md`、prompt 模板（reviewer prompts、arbiter prompt、conflict-detection prompt、index-entry-schema 等）、文件模板示范文件（`skills/resume-*/templates/*`）均使用英语编写。这保持与上游 superpowers 一致的工程约定，且大语言模型（包括 deepseek-v4-pro）对英语 prompt 的指令遵循稳定性更高。
+
+**例外**：运行时由用户输入或 ds 生成的内容（决策日志中的 Q&A 文本、finding 的 problem/evidence/suggestion 字段值、用户介入决策的理由等）保持用户使用的语言，由 ds 自动判定。**框架/字段名永远是英语，内容可以是任何语言。**
+
 ## Design
 
 ### A. 多 reviewer 评审子系统（`skills/multi-reviewer/`）
@@ -320,97 +326,97 @@ skills/managing-samples/
 **Date Started:** YYYY-MM-DD
 **Status:** In Progress | Done | Abandoned
 **Current Phase:** alignment | spec_writing | review_round_N | awaiting_user_decision | finalizing
-**Based On:** <老文件名>             # 仅延续时
-**Final Spec:** <spec 路径>          # Done 时填
+**Based On:** <previous brainstorm filename>   # only when continuing
+**Final Spec:** <spec path>                    # filled when Done
 **Last Updated:** YYYY-MM-DD HH:MM
 
-## 用户原始需求
+## Original User Request
 
-> <用户首条 message 原文，逐字>
+> <user's first message verbatim>
 
 ---
 
-## Phase A: 对齐阶段决策日志
+## Phase A: Alignment Decision Log
 
-### Q1: <问题摘要>
-**呈现选项:**
+### Q1: <question summary>
+**Options Presented:**
 - A: ...
 - B: ...
-**决定:** B
-**理由:** <用户理由或采纳推荐>
-**时间戳:** YYYY-MM-DD HH:MM
+**Decision:** B
+**Rationale:** <user rationale or accepted recommendation>
+**Timestamp:** YYYY-MM-DD HH:MM
 
 ### Q2: ...
 
-### Phase A → B 转换确认 [时间戳]
-**对齐结论摘要（ds 汇总）:**
-- 决策 1: ...
-- 决策 2: ...
+### Phase A → B Transition Confirmation [timestamp]
+**Alignment Summary (compiled by ds):**
+- Decision 1: ...
+- Decision 2: ...
 
-**用户确认:** ✓ 已确认 / 要求补充（回到 Phase A 继续 Q<n+1>）
+**User Confirmation:** ✓ Confirmed / Needs more (back to Phase A Q<n+1>)
 
 ---
 
-## Phase B: Spec 编写状态
+## Phase B: Spec Writing Status
 
-- [✓] 初稿完成 (时间: ...)
-- [✓] Round 1 修订 (时间: ...)
-- [⏳] Round 2 修订
-- [ ] 最终签字
+- [✓] Initial draft complete (time: ...)
+- [✓] Round 1 revision   (time: ...)
+- [⏳] Round 2 revision
+- [ ] Final sign-off
 
-## Phase B 评审进度
+## Phase B Review Progress
 
-### Round 1 [✓ 完成]
+### Round 1 [✓ Complete]
 
-**派发 reviewer (5):** architect | red-team | edge-cases | yagni | exemplar-matcher(sample-1)
+**Dispatched reviewers (5):** architect | red-team | edge-cases | yagni | exemplar-matcher(sample-1)
 
-**回执状态:** architect ✓ | red-team ✓ | edge-cases ✓ | yagni ✓ | exemplar-matcher ✓
+**Receipt Status:** architect ✓ | red-team ✓ | edge-cases ✓ | yagni ✓ | exemplar-matcher ✓
 
 **Findings:**
 
-| ID | Sev | Location | Reviewer | Problem | Arbiter | 处理状态 |
-|----|-----|----------|----------|---------|---------|----------|
-| F1.1 | B | §X | architect | ... | 保留 | ✓ 已修 |
-| F1.2 | I | §Y | red-team | ... | 保留 | ✗ 用户驳回(I1) |
-| F1.3 | I | §Z | edge-cases | ... | 保留 | ✓ 已修 |
-| F1.4 | I | §W | yagni | 子任务 c 可删 | 合并到 F1.5 | (合并) |
-| F1.5 | I | §W | architect | 子任务 c 边界不清 | 保留 | ✓ 已修 |
-| F1.6 | I | §X | red-team | 与 F1.1 重复 | 去重丢弃 | - |
-| F1.7 | I | §Goals | exemplar | 缺证据 | 去伪丢弃 | - |
-| F1.8 | N | §Header | architect | 表格对齐 | 入附录 | (NIT) |
+| ID | Sev | Location | Reviewer | Problem | Arbiter | Status |
+|----|-----|----------|----------|---------|---------|--------|
+| F1.1 | B | §X | architect | ... | KEEP | ✓ FIXED |
+| F1.2 | I | §Y | red-team | ... | KEEP | ✗ USER_REJECTED(I1) |
+| F1.3 | I | §Z | edge-cases | ... | KEEP | ✓ FIXED |
+| F1.4 | I | §W | yagni | sub-task c removable | MERGED into F1.5 | (MERGED) |
+| F1.5 | I | §W | architect | sub-task c boundary unclear | KEEP | ✓ FIXED |
+| F1.6 | I | §X | red-team | duplicate of F1.1 | DEDUP_DISCARDED | - |
+| F1.7 | I | §Goals | exemplar | missing evidence | FALSE_DISCARDED | - |
+| F1.8 | N | §Header | architect | table misaligned | APPENDIX | (NIT) |
 
-**Arbiter 输出:**
+**Arbiter Output:**
 - counts: raw=12 → dedup=10 → after_filter=8 (B=1, I=4, N=3)
 - degradation_check: N/A (Round 1)
 - convergence_status: CONTINUE
-- arbiter_rationale: 任务粒度问题严重，F1.2 与边界条件相关需用户判断
+- arbiter_rationale: Task granularity issues critical; F1.2 needs user decision due to boundary condition trade-off
 
-### Round 2 [⏳ 进行中]
+### Round 2 [⏳ In Progress]
 ...
 
 ---
 
-## Phase B 用户介入决策
+## Phase B User Intervention Decisions
 
-### I1 [✓ 已决]
-**触发轮次:** Round 1
-**触发 finding:** F1.2
-**介入原因:** F1.2 的修订方案有 A/B 两种，arbiter 判定需用户决定
-**呈现选项:**
+### I1 [✓ Decided]
+**Triggered in round:** Round 1
+**Related finding:** F1.2
+**Reason for intervention:** F1.2 has revision options A/B; arbiter determined user must decide
+**Options Presented:**
 - A: ...
 - B: ...
-**用户决定:** B
-**理由:** ...
-**时间戳:** ...
+**User Decision:** B
+**Rationale:** ...
+**Timestamp:** ...
 ```
 
-#### C.3 Sev / Arbiter / 处理状态枚举
+#### C.3 字段枚举值（英语，由模板规定）
 
 | 字段 | 取值 |
 |---|---|
 | Sev | B (BLOCKING) / I (IMPORTANT) / N (NIT) |
-| Arbiter 裁决 | 保留 / 合并到 F\<x.y\> / 去重丢弃 / 去伪丢弃 / 入附录 |
-| 处理状态 | ✓ 已修 / ⏳ 待修 / ✗ 用户驳回(I\<x\>) / (合并) / (NIT) / - |
+| Arbiter | KEEP / MERGED into F\<x.y\> / DEDUP_DISCARDED / FALSE_DISCARDED / APPENDIX |
+| Status | ✓ FIXED / ⏳ PENDING / ✗ USER_REJECTED(I\<x\>) / (MERGED) / (NIT) / - |
 
 #### C.4 Append 触发点
 
@@ -459,37 +465,37 @@ Current Phase 在 Status=In Progress 时取值:
 **Status:** In Progress | Done | Abandoned
 **Current Phase:** draft_writing | review_round_N | awaiting_user_decision | finalizing
 **Source Spec:** docs/superpowers/specs/...md
-**Based On:** <老 plan-progress 文件名>      # 仅延续时
-**Final Plan:** <plan 路径>                   # Done 时填
+**Based On:** <previous plan-progress filename>  # only when continuing
+**Final Plan:** <plan path>                       # filled when Done
 **Last Updated:** YYYY-MM-DD HH:MM
 
-## Plan 编写状态
+## Plan Writing Status
 
-- [✓] 初稿完成 (时间: ...)
-- [✓] Round 1 修订 (时间: ...)
-- [⏳] Round 2 修订
-- [ ] 最终签字
+- [✓] Initial draft complete (time: ...)
+- [✓] Round 1 revision   (time: ...)
+- [⏳] Round 2 revision
+- [ ] Final sign-off
 
-## 评审进度
+## Review Progress
 
-### Round 1 [✓ 完成]
-[与 C.2 中 Phase B 评审进度同结构]
+### Round 1 [✓ Complete]
+[same structure as Phase B Review Progress in C.2]
 
-### Round 2 [⏳ 进行中]
+### Round 2 [⏳ In Progress]
 ...
 
-## 用户介入决策
+## User Intervention Decisions
 
 ### I1 [...]
 ...
 
-## Context 资料
+## Context Reference
 
-### Source Spec 摘要
-> <从 spec 提取的 problem + goals>
+### Source Spec Summary
+> <extracted problem + goals from source spec>
 
-### 用户的启动指令
-> <原话>
+### User's Launch Instruction
+> <original message>
 ```
 
 #### D.3 与 brainstorm 文件的差异
@@ -497,8 +503,8 @@ Current Phase 在 Status=In Progress 时取值:
 - 无 Phase A（对齐阶段）— planning 启动必须有 Done 的 spec 作为输入
 - Current Phase 取值缺 `alignment`：仅 `draft_writing / review_round_N / awaiting_user_decision / finalizing`
 - 加 `Source Spec` 必选字段
-- 加 `Context 资料` 段（Source Spec 摘要 + 用户启动指令）
-- 内容主体不再是 Q&A，而是"plan 编写状态 + 评审进度 + 用户介入决策"
+- 加 `Context Reference` 段（Source Spec Summary + User's Launch Instruction）
+- 内容主体不再是 Q&A，而是 Plan Writing Status + Review Progress + User Intervention Decisions
 
 #### D.4 Append 触发点 + commit 时机
 
