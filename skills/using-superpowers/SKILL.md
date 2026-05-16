@@ -7,6 +7,32 @@ description: Use when starting any conversation - establishes how to find and us
 If you were dispatched as a subagent to execute a specific task, skip this skill.
 </SUBAGENT-STOP>
 
+<FORK-NOTICE>
+**You are running `superpowers-deepseek-v4`, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.**
+
+This fork is NOT a drop-in replacement of upstream. Several core SKILLs have been refactored and new SKILLs have been added. Adapt your workflow accordingly.
+
+**Why this fork exists**: DeepSeek-V4-Pro scores low on architecture / design / review tasks. This fork mitigates that via (1) exemplar-sample alignment to raise output stability and (2) a multi-reviewer subsystem that breaks single-context blind spots through parallel independent reviewers + an arbiter + multi-round convergence.
+
+**Key differences from upstream `obra/superpowers`:**
+
+1. **`brainstorming` is now two-phase.** Phase A is human-driven alignment Q&A (recorded to `docs/superpowers/brainstorms/<date>-<topic-slug>-brainstorm.md`). Phase B is agent-driven spec writing + multi-reviewer loop. Step 0 strictly invokes `superpowers:resume-brainstorming` first.
+
+2. **`writing-plans` is rewritten.** Step 0 strictly invokes `superpowers:resume-planning`, which forces a mandatory source-spec selection from `Done` brainstorming sessions. Progress is tracked in `docs/superpowers/brainstorms/<date>-<topic-slug>-plan-progress.md`. Reviews go through the multi-reviewer subsystem.
+
+3. **NEW SKILL `superpowers:multi-reviewer`** — replaces the old single-reviewer prompts. Dispatches 4 fixed reviewers (architect, red-team, edge-cases, yagni-gatekeeper) + 0–2 exemplar-matchers in parallel, plus an arbiter that filters / dedups / arbitrates. Has 5-layer convergence rules (50% degradation check + 3-round hard cap) and a user-arbitration handoff for unresolved findings. Called by both `brainstorming` (Phase B) and `writing-plans`.
+
+4. **NEW exemplar samples library** at `samples/specs/` + `samples/plans/`, indexed by `INDEX.md`. Both `brainstorming` Phase B and `writing-plans` match the current task against the INDEX (cap 2 samples) before drafting; each matched sample also spawns one dedicated `exemplar-matcher` reviewer in the multi-reviewer loop. Zero matches → multi-reviewer runs with 4 reviewers instead of 5–6.
+
+5. **NEW SKILL `superpowers:managing-samples`** — STRICTLY user-driven. Use ONLY when the user explicitly says "initialize the samples library" or "add `<file>` as a sample". Never auto-trigger; never proactively recommend "save this as a sample".
+
+6. **NEW SKILLs `superpowers:resume-brainstorming` and `superpowers:resume-planning`** — lifecycle SKILLs for the decision-log / plan-progress files. They list past sessions and let the user resume an `In Progress` session, start a new session based on a `Done` or `Abandoned` prior session, or abandon an existing one. Both `brainstorming` and `writing-plans` invoke them as Step 0.
+
+**What is unchanged**: all other SKILLs (TDD, debugging, subagent-driven-development, requesting-code-review, etc.) are byte-identical to upstream 5.1.0. Skill-discovery mechanics, `<HARD-GATE>` semantics, red-flag tables, and user-instruction priority are preserved.
+
+**Reference docs**: `docs/superpowers/specs/2026-05-16-deepseek-v4-pro-optimization-design.md` (design rationale) and `docs/superpowers/plans/2026-05-16-deepseek-v4-pro-optimization.md` (implementation plan).
+</FORK-NOTICE>
+
 <EXTREMELY-IMPORTANT>
 If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
 
