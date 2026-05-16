@@ -1,152 +1,159 @@
 ---
 name: writing-plans
-description: Use when you have a spec or requirements for a multi-step task, before touching code
+description: Use when a Done spec exists and a multi-step implementation plan must be produced. Writes the plan with bite-sized TDD-style tasks, runs the multi-reviewer subsystem until convergence, and tracks the entire spec-to-plan process in a plan-progress file.
 ---
 
 # Writing Plans
 
-## Overview
+Produce a comprehensive implementation plan from a Done spec. Assume the implementing engineer has zero context for our codebase and questionable taste: spell everything out — files, code, expected output, commits. DRY, YAGNI, TDD, frequent commits.
 
-Write comprehensive implementation plans assuming the engineer has zero context for our codebase and questionable taste. Document everything they need to know: which files to touch for each task, code, testing, docs they might need to check, how to test it. Give them the whole plan as bite-sized tasks. DRY. YAGNI. TDD. Frequent commits.
+Track the full spec-to-plan process in a `*-plan-progress.md` file. Mid-process never commits; only `Status: Done` or `Status: Abandoned` commits.
 
-Assume they are a skilled developer, but know almost nothing about our toolset or problem domain. Assume they don't know good test design very well.
+**Announce at start:** "I'm using the writing-plans SKILL."
 
-**Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
+## Step 0 (strict first step): Invoke resume-planning
 
-**Context:** If working in an isolated worktree, it should have been created via the `superpowers:using-git-worktrees` skill at execution time.
+Always invoke `superpowers:resume-planning` first. It:
+1. Forces selection of a Done source spec.
+2. Scans existing plan-progress files for that spec.
+3. Returns one of:
+   - `proceed-with-new-empty` + source spec path (no existing plan-progress for this spec, or user chose new)
+   - A path of an In Progress file to continue (option A)
+   - A new file path (Based On a Done or Abandoned plan-progress) plus the prior file's content as context
 
-**Save plans to:** `docs/superpowers/plans/YYYY-MM-DD-<feature-name>.md`
-- (User preferences for plan location override this default)
+## Step 1: Initialize the plan-progress file
 
-## Scope Check
+Use `skills/resume-planning/templates/plan-progress-template.md` as the verbatim base. Fill the metadata header:
+- `Date Started: <today>`
+- `Status: In Progress`
+- `Current Phase: draft_writing`
+- `Source Spec: <path from Step 0>`
+- `Based On:` (only if resume returned a new-based-on path)
+- `Last Updated: <now>`
 
-If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
+Populate Context Reference:
+- `Source Spec Summary` — extract Problem + Goals (or equivalent) from the source spec.
+- `User's Launch Instruction` — the user's message that triggered this writing-plans invocation, verbatim.
 
-## File Structure
+## Step 2: Scope check
 
-Before defining tasks, map out which files will be created or modified and what each one is responsible for. This is where decomposition decisions get locked in.
+If the source spec covers multiple independent subsystems, the brainstorming phase should have decomposed it already. If you nonetheless find the spec sprawls into independent areas, push back: suggest splitting into multiple plans — one per subsystem — each producing working, testable software on its own. Record any such decomposition in the plan-progress file (as plain note, not a Q&A — plan-progress has no Q&A section).
 
-- Design units with clear boundaries and well-defined interfaces. Each file should have one clear responsibility.
-- You reason best about code you can hold in context at once, and your edits are more reliable when files are focused. Prefer smaller, focused files over large ones that do too much.
-- Files that change together should live together. Split by responsibility, not by technical layer.
-- In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
+## Step 3: Sample matching
 
-This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
+Read `samples/plans/INDEX.md`. Semantically match the current task against each entry's metadata.
+- Select up to 2 most relevant samples.
+- Tell the user: "Selected sample(s) `<filenames>` as references because <reason>. Proceeding."
+- If the user objects, accept overrides.
+- If 0 samples, record it; the multi-reviewer subsystem runs with 4 reviewers only.
 
-## Bite-Sized Task Granularity
+Load the chosen samples' full content into your context.
 
-**Each step is one action (2-5 minutes):**
-- "Write the failing test" - step
-- "Run it to make sure it fails" - step
-- "Implement the minimal code to make the test pass" - step
-- "Run the tests and make sure they pass" - step
-- "Commit" - step
+## Step 4: Write the initial plan draft
 
-## Plan Document Header
+Write `docs/superpowers/plans/<today>-<source-spec-slug>.md` from scratch.
 
-**Every plan MUST start with this header:**
+The plan must:
+- Start with the required header:
 
 ```markdown
 # [Feature Name] Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** [One sentence describing what this builds]
+**Goal:** [One sentence]
 
-**Architecture:** [2-3 sentences about approach]
+**Architecture:** [2–3 sentences about the approach]
 
 **Tech Stack:** [Key technologies/libraries]
+
+**Spec:** `<path to source spec>`
 
 ---
 ```
 
-## Task Structure
+- Use the `### Task N: <component>` structure for every task, with:
+  - **Files:** list of files to Create / Modify / Delete (exact paths and line ranges where appropriate).
+  - Numbered checkbox steps `- [ ] **Step N: <action>**`.
+  - For TDD-able code tasks: failing test first, run-to-fail confirmation, minimal implementation, run-to-pass confirmation, commit. Each step is 2–5 minutes of work.
+  - For prompt-template / skill-file tasks where TDD does not apply: a structure self-check step in lieu of test step (see Task 1.4 of THIS plan as a model).
+  - For each commit step: exact `git add` + commit message with a heredoc.
 
-````markdown
-### Task N: [Component Name]
+- **No placeholders.** No "TBD", "implement later", "similar to Task N", "add appropriate error handling". Every step contains the actual content the engineer needs.
 
-**Files:**
-- Create: `exact/path/to/file.py`
-- Modify: `exact/path/to/existing.py:123-145`
-- Test: `tests/exact/path/to/test.py`
+After writing, update the plan-progress file: `[✓] Initial draft complete (time: <now>)`. Update `Current Phase: review_round_1`.
 
-- [ ] **Step 1: Write the failing test**
+## Step 5: Multi-reviewer loop
 
-```python
-def test_specific_behavior():
-    result = function(input)
-    assert result == expected
-```
+Invoke `superpowers:multi-reviewer`. Pass:
+- The draft (the plan file).
+- The matched samples (0–2).
+- The plan-progress file path.
 
-- [ ] **Step 2: Run test to verify it fails**
+When it returns:
+- `STOP_CONVERGED` → continue to Step 6.
+- `STOP_DEGENERATE` or `STOP_LIMIT` with unresolved → user-arbitration completed within the subsystem; continue to Step 6 once all unresolved findings have a USER_REJECTED / USER_DEFERRED / FIXED disposition.
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: FAIL with "function not defined"
+Update the file: `Current Phase: finalizing`.
 
-- [ ] **Step 3: Write minimal implementation**
+## Step 6: Plan self-review (the inline check the agent runs)
 
-```python
-def function(input):
-    return expected
-```
+Before showing the plan to the user, do a fresh-eyes pass per the prior writing-plans guidelines:
+1. **Spec coverage** — for each requirement in the source spec, can you point to a plan task that implements it? If not, add one.
+2. **Placeholder scan** — search for TBD, TODO, "implement later", "similar to", undefined types/functions, missing code blocks. Fix inline.
+3. **Type consistency** — names, signatures, file paths used in later tasks match what earlier tasks defined.
 
-- [ ] **Step 4: Run test to verify it passes**
+Fix issues inline.
 
-Run: `pytest tests/path/test.py::test_name -v`
-Expected: PASS
+## Step 7: User sign-off and commit
 
-- [ ] **Step 5: Commit**
+Show the plan to the user: "Plan written at `<plan path>`. Please review and either approve or request specific changes."
 
-```bash
-git add tests/path/test.py src/path/file.py
-git commit -m "feat: add specific feature"
-```
-````
+If the user requests changes, revise and re-present (recording the changes in the plan-progress file's Plan Writing Status updates as additional revision rounds).
 
-## No Placeholders
+When the user approves:
+1. Update the plan-progress file:
+   - `Status: Done`
+   - `Current Phase: finalizing` (stays)
+   - `Final Plan: <plan path>`
+   - `Last Updated: <now>`
+2. Commit both the plan and the plan-progress file:
+   ```bash
+   git add docs/superpowers/plans/<plan-filename>.md docs/superpowers/brainstorms/<plan-progress-filename>.md
+   git commit -m "feat(plan): <topic>"
+   ```
 
-Every step must contain the actual content an engineer needs. These are **plan failures** — never write them:
-- "TBD", "TODO", "implement later", "fill in details"
-- "Add appropriate error handling" / "add validation" / "handle edge cases"
-- "Write tests for the above" (without actual test code)
-- "Similar to Task N" (repeat the code — the engineer may be reading tasks out of order)
-- Steps that describe what to do without showing how (code blocks required for code steps)
-- References to types, functions, or methods not defined in any task
+## Step 8: Execution handoff
 
-## Remember
-- Exact file paths always
-- Complete code in every step — if a step changes code, show the code
-- Exact commands with expected output
-- DRY, YAGNI, TDD, frequent commits
+Offer the user the execution choice (preserved from previous writing-plans behavior):
 
-## Self-Review
+> "Plan complete at `<path>`. Two execution options:
+>
+> **1. Subagent-Driven (recommended)** — fresh subagent per task, two-stage review between tasks, fast iteration.
+>
+> **2. Inline Execution** — execute tasks in this session using executing-plans, batch execution with checkpoints.
+>
+> Which approach?"
 
-After writing the complete plan, look at the spec with fresh eyes and check the plan against it. This is a checklist you run yourself — not a subagent dispatch.
+- If Subagent-Driven → invoke `superpowers:subagent-driven-development`.
+- If Inline → invoke `superpowers:executing-plans`.
 
-**1. Spec coverage:** Skim each section/requirement in the spec. Can you point to a task that implements it? List any gaps.
+## Abandonment
 
-**2. Placeholder scan:** Search your plan for red flags — any of the patterns from the "No Placeholders" section above. Fix them.
+Same as brainstorming abandonment: set `Status: Abandoned`, append `## Abandonment` block with timestamp and reason, commit.
 
-**3. Type consistency:** Do the types, method signatures, and property names you used in later tasks match what you defined in earlier tasks? A function called `clearLayers()` in Task 3 but `clearFullLayers()` in Task 7 is a bug.
+## Anti-patterns
 
-If you find issues, fix them inline. No need to re-review — just fix and move on. If you find a spec requirement with no task, add the task.
+- "Skip the multi-reviewer loop for a small plan." No. The loop is the design.
+- "Commit each round of revision." No. Mid-process never commits.
+- "Use 'similar to Task 1' for repeated patterns." No. Repeat the content; engineers may read tasks out of order.
+- "Mark a step as 'add tests for the above' without writing the tests." No. Every step is concrete.
 
-## Execution Handoff
+## Files referenced
 
-After saving the plan, offer execution choice:
-
-**"Plan complete and saved to `docs/superpowers/plans/<filename>.md`. Two execution options:**
-
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
-
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
-
-**Which approach?"**
-
-**If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:subagent-driven-development
-- Fresh subagent per task + two-stage review
-
-**If Inline Execution chosen:**
-- **REQUIRED SUB-SKILL:** Use superpowers:executing-plans
-- Batch execution with checkpoints for review
+- `superpowers:resume-planning` (mandatory first step)
+- `superpowers:multi-reviewer` (review loop)
+- `samples/plans/INDEX.md` and any sample file selected
+- `docs/superpowers/brainstorms/<filename>-plan-progress.md` (the progress file)
+- `docs/superpowers/plans/<filename>.md` (the produced plan)
+- `superpowers:subagent-driven-development` or `superpowers:executing-plans` (execution handoff)
