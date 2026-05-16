@@ -3,162 +3,175 @@ name: brainstorming
 description: "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation."
 ---
 
-# Brainstorming Ideas Into Designs
+# Brainstorming
 
-Help turn ideas into fully formed designs and specs through natural collaborative dialogue.
+Turn ideas into specs through a structured two-phase flow.
 
-Start by understanding the current project context, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design and get user approval.
+- **Phase A (alignment)** — human-driven dialogue. Ask one question at a time, propose 2–3 approaches with trade-offs, record every decision with its rationale.
+- **Phase B (spec writing)** — agent-driven draft + multi-reviewer review loop until convergence, with user-arbitration on unresolved findings.
+
+A decision-log file is created at session start and appended throughout. `Status: Done` and `git commit` only happen at terminal state.
 
 <HARD-GATE>
-Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until you have presented a design and the user has approved it. This applies to EVERY project regardless of perceived simplicity.
+Do NOT invoke any implementation skill, write any code, scaffold any project, or take any implementation action until Phase B has converged and the user has signed off on the spec.
 </HARD-GATE>
 
-## Anti-Pattern: "This Is Too Simple To Need A Design"
+**Announce at start:** "I'm using the brainstorming SKILL."
 
-Every project goes through this process. A todo list, a single-function utility, a config change — all of them. "Simple" projects are where unexamined assumptions cause the most wasted work. The design can be short (a few sentences for truly simple projects), but you MUST present it and get approval.
+## Step 0 (strict first step): Invoke resume-brainstorming
 
-## Checklist
+Always invoke `superpowers:resume-brainstorming` first. It either:
+- Returns `proceed-with-new-empty` (no existing decision logs) → continue to Step 1 with a fresh file.
+- Returns the path of an In Progress file to continue → skip to the matching point in the flow per the resume table.
+- Returns the path of a new file (Based On a Done or Abandoned file) plus prior-discussion context → continue to Step 1, but treat the prior content as established background instead of starting from zero.
 
-You MUST create a task for each of these items and complete them in order:
+## Step 1: Initialize the decision-log file
 
-1. **Explore project context** — check files, docs, recent commits
-2. **Offer visual companion** (if topic will involve visual questions) — this is its own message, not combined with a clarifying question. See the Visual Companion section below.
-3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
-4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+Use `skills/resume-brainstorming/templates/brainstorm-template.md` as the verbatim base. Fill the metadata header:
+- `Date Started: <today>`
+- `Status: In Progress`
+- `Current Phase: alignment`
+- `Last Updated: <now>`
+- `Based On:` (only if resume-brainstorming returned a new-based-on file)
 
-## Process Flow
+Write the user's first message verbatim under `## Original User Request`.
 
-```dot
-digraph brainstorming {
-    "Explore project context" [shape=box];
-    "Visual questions ahead?" [shape=diamond];
-    "Offer Visual Companion\n(own message, no other content)" [shape=box];
-    "Ask clarifying questions" [shape=box];
-    "Propose 2-3 approaches" [shape=box];
-    "Present design sections" [shape=box];
-    "User approves design?" [shape=diamond];
-    "Write design doc" [shape=box];
-    "Spec self-review\n(fix inline)" [shape=box];
-    "User reviews spec?" [shape=diamond];
-    "Invoke writing-plans skill" [shape=doublecircle];
+Confirm the `<topic-slug>` with the user before doing anything else (the filename uses this slug).
 
-    "Explore project context" -> "Visual questions ahead?";
-    "Visual questions ahead?" -> "Offer Visual Companion\n(own message, no other content)" [label="yes"];
-    "Visual questions ahead?" -> "Ask clarifying questions" [label="no"];
-    "Offer Visual Companion\n(own message, no other content)" -> "Ask clarifying questions";
-    "Ask clarifying questions" -> "Propose 2-3 approaches";
-    "Propose 2-3 approaches" -> "Present design sections";
-    "Present design sections" -> "User approves design?";
-    "User approves design?" -> "Present design sections" [label="no, revise"];
-    "User approves design?" -> "Write design doc" [label="yes"];
-    "Write design doc" -> "Spec self-review\n(fix inline)";
-    "Spec self-review\n(fix inline)" -> "User reviews spec?";
-    "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
-}
+## Step 2: Scope check
+
+If the user's request spans multiple independent subsystems, push back. Help the user decompose into sub-projects; each sub-project gets its own brainstorming + spec + plan cycle. Record the decomposition discussion in the decision log; once the user picks one sub-project to brainstorm, continue.
+
+## Step 3: Phase A (alignment) — questions and decisions
+
+Ask one question at a time, prefer multiple-choice. After each user response:
+- Append a `### Q<n>: <summary>` block to the decision log:
+  ```
+  ### Q<n>: <one-line question summary>
+  **Options Presented:** <A/B/C list with one-line each>
+  **Decision:** <chosen option>
+  **Rationale:** <user rationale or recommended default accepted>
+  **Timestamp:** <now>
+  ```
+- Update `Last Updated`.
+
+Continue until you can write the spec. Indicators you are done with Phase A:
+- All architectural decisions are made (you would not need to ask the user again before producing a draft).
+- Goals, Non-Goals, Design Principles are settled.
+- All ambiguities flagged in early questions are resolved.
+
+## Step 4: Phase A → Phase B transition
+
+Compile an "Alignment Summary" — bullet list of every decision made in Phase A. Append to the decision log:
+
+```
+### Phase A → B Transition Confirmation [<timestamp>]
+**Alignment Summary (compiled by ds):**
+- Decision 1: ...
+- Decision 2: ...
+
+**User Confirmation:** <to be filled>
 ```
 
-**The terminal state is invoking writing-plans.** Do NOT invoke frontend-design, mcp-builder, or any other implementation skill. The ONLY skill you invoke after brainstorming is writing-plans.
+Show the summary to the user. They either confirm (set `User Confirmation: ✓ Confirmed`) or request more alignment (set `User Confirmation: Needs more — back to Phase A Q<n+1>`).
 
-## The Process
+If they request more, go back to Step 3. Only after `✓ Confirmed` do you proceed.
 
-**Understanding the idea:**
+Update the file: `Current Phase: spec_writing`.
 
-- Check out the current project state first (files, docs, recent commits)
-- Before asking detailed questions, assess scope: if the request describes multiple independent subsystems (e.g., "build a platform with chat, file storage, billing, and analytics"), flag this immediately. Don't spend questions refining details of a project that needs to be decomposed first.
-- If the project is too large for a single spec, help the user decompose into sub-projects: what are the independent pieces, how do they relate, what order should they be built? Then brainstorm the first sub-project through the normal design flow. Each sub-project gets its own spec → plan → implementation cycle.
-- For appropriately-scoped projects, ask questions one at a time to refine the idea
-- Prefer multiple choice questions when possible, but open-ended is fine too
-- Only one question per message - if a topic needs more exploration, break it into multiple questions
-- Focus on understanding: purpose, constraints, success criteria
+## Step 5: Sample matching (before writing the draft)
 
-**Exploring approaches:**
+Read `samples/specs/INDEX.md`. Semantically match the current task against each entry's metadata.
+- Select up to 2 most relevant samples.
+- Tell the user: "Selected sample(s) `<filenames>` as references because <reason>. Proceeding."
+- If the user objects, accept overrides (different sample, no sample, etc.).
+- If 0 samples are selected (no good matches), record this; the multi-reviewer subsystem will run with 4 reviewers only.
 
-- Propose 2-3 different approaches with trade-offs
-- Present options conversationally with your recommendation and reasoning
-- Lead with your recommended option and explain why
+Load the chosen samples' full content into your context.
 
-**Presenting the design:**
+## Step 6: Write the initial spec draft
 
-- Once you believe you understand what you're building, present the design
-- Scale each section to its complexity: a few sentences if straightforward, up to 200-300 words if nuanced
-- Ask after each section whether it looks right so far
-- Cover: architecture, components, data flow, error handling, testing
-- Be ready to go back and clarify if something doesn't make sense
+Write `docs/superpowers/specs/<today>-<topic-slug>-design.md` from scratch. Use the Alignment Summary as your input. Use the matched samples as structural references.
 
-**Design for isolation and clarity:**
+The spec should contain: Problem, Goals, Non-Goals, Design Principles, Design (with subsections per major component), Implementation Phases, Testing Strategy, File Inventory, Out of Scope. Adjust to suit the topic.
 
-- Break the system into smaller units that each have one clear purpose, communicate through well-defined interfaces, and can be understood and tested independently
-- For each unit, you should be able to answer: what does it do, how do you use it, and what does it depend on?
-- Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
-- Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
+After writing, update the decision log's Phase B Spec Writing Status: `[✓] Initial draft complete (time: <now>)`. Update `Current Phase: review_round_1`.
 
-**Working in existing codebases:**
+## Step 7: Multi-reviewer loop
 
-- Explore the current structure before proposing changes. Follow existing patterns.
-- Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
-- Don't propose unrelated refactoring. Stay focused on what serves the current goal.
+Invoke `superpowers:multi-reviewer`. Pass:
+- The draft (the spec file you just wrote).
+- The matched samples (0–2) so exemplar-matcher reviewers can be dispatched, one per sample.
+- The decision-log file path so the subsystem can update Receipt Status, Findings table, Arbiter Output, and Appendix.
 
-## After the Design
+The multi-reviewer SKILL handles the loop, the parallel dispatch, the arbiter, the revisions, and the user-arbitration handoff. When it returns:
+- `STOP_CONVERGED` → continue to Step 8.
+- `STOP_DEGENERATE` or `STOP_LIMIT` with unresolved → user-arbitration was completed within the subsystem; continue to Step 8 once all unresolved findings have a USER_REJECTED / USER_DEFERRED / FIXED disposition.
 
-**Documentation:**
+Update the file: `Current Phase: finalizing`.
 
-- Write the validated design (spec) to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md`
-  - (User preferences for spec location override this default)
-- Use elements-of-style:writing-clearly-and-concisely skill if available
-- Commit the design document to git
+## Step 8: Spec self-review (the inline check the agent runs)
 
-**Spec Self-Review:**
-After writing the spec document, look at it with fresh eyes:
+Before showing the spec to the user for sign-off, do a fresh-eyes pass:
+1. **Placeholder scan** — any TBD, TODO, unfilled sections? Fix inline.
+2. **Internal consistency** — do sections contradict each other?
+3. **Scope check** — is this still focused enough for a single implementation plan, or has it bloated?
+4. **Ambiguity check** — could any requirement be interpreted two ways? Pick one and make it explicit.
 
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+Fix any issues inline. No need to re-run multi-reviewer for these (they are owner-eye nits, not blocking).
 
-Fix any issues inline. No need to re-review — just fix and move on.
+## Step 9: User sign-off and commit
 
-**User Review Gate:**
-After the spec review loop passes, ask the user to review the written spec before proceeding:
+Show the spec to the user: "Spec written at `<spec path>`. Please review and either approve or request specific changes."
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+If the user requests changes, treat them as a tiny new round: revise the spec, append the changes as decisions in the decision log (under a new "Post-Review User Revisions" section), then re-present.
 
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+When the user approves:
+1. Update the decision log:
+   - `Status: Done`
+   - `Current Phase: finalizing` (stays)
+   - `Final Spec: <spec path>`
+   - `Last Updated: <now>`
+2. Commit both the spec and the decision log:
+   ```bash
+   git add docs/superpowers/specs/<spec-filename>.md docs/superpowers/brainstorms/<decision-log-filename>.md
+   git commit -m "feat(spec): <topic>"
+   ```
 
-**Implementation:**
+## Step 10: Hand off to writing-plans
 
-- Invoke the writing-plans skill to create a detailed implementation plan
-- Do NOT invoke any other skill. writing-plans is the next step.
+After commit, tell the user: "Spec committed at `<path>`. Ready to move to implementation planning? I can invoke writing-plans now."
 
-## Key Principles
+If the user agrees, invoke `superpowers:writing-plans`. Do not invoke any other implementation skill.
 
-- **One question at a time** - Don't overwhelm with multiple questions
-- **Multiple choice preferred** - Easier to answer than open-ended when possible
-- **YAGNI ruthlessly** - Remove unnecessary features from all designs
-- **Explore alternatives** - Always propose 2-3 approaches before settling
-- **Incremental validation** - Present design, get approval before moving on
-- **Be flexible** - Go back and clarify when something doesn't make sense
+## Abandonment
 
-## Visual Companion
+If at any point the user wants to abandon:
+1. Update the decision log: `Status: Abandoned`
+2. Append:
+   ```
+   ## Abandonment
+   **Timestamp:** <now>
+   **Reason:** <user reason>
+   ```
+3. `git add` + `git commit -m "abandon brainstorm: <topic>"`
 
-A browser-based companion for showing mockups, diagrams, and visual options during brainstorming. Available as a tool — not a mode. Accepting the companion means it's available for questions that benefit from visual treatment; it does NOT mean every question goes through the browser.
+## Anti-patterns
 
-**Offering the companion:** When you anticipate that upcoming questions will involve visual content (mockups, layouts, diagrams), offer it once for consent:
-> "Some of what we're working on might be easier to explain if I can show it to you in a web browser. I can put together mockups, diagrams, comparisons, and other visuals as we go. This feature is still new and can be token-intensive. Want to try it? (Requires opening a local URL)"
+- "This is simple, skip Phase A." Every project goes through Phase A. The decision log can be short, but it must exist.
+- "I'll write the spec without the multi-reviewer loop because it looks fine." No. The loop is the design.
+- "I'll commit the decision log every round to keep things safe." No. Only Status terminal state commits. The file is on disk for visibility; git is for finished artifacts.
+- "I'll skip the sample matching, the samples library is small." No. Even 0 matches is an outcome that must be recorded; it changes the reviewer dispatch count.
 
-**This offer MUST be its own message.** Do not combine it with clarifying questions, context summaries, or any other content. The message should contain ONLY the offer above and nothing else. Wait for the user's response before continuing. If they decline, proceed with text-only brainstorming.
+## Visual companion (preserved)
 
-**Per-question decision:** Even after the user accepts, decide FOR EACH QUESTION whether to use the browser or the terminal. The test: **would the user understand this better by seeing it than reading it?**
+The `visual-companion.md` and `scripts/` from the previous version of this SKILL remain available. They are unrelated to the multi-reviewer changes; offer them when topics will benefit from mockups, diagrams, or comparisons. The offer must be its own message — see `visual-companion.md` for details.
 
-- **Use the browser** for content that IS visual — mockups, wireframes, layout comparisons, architecture diagrams, side-by-side visual designs
-- **Use the terminal** for content that is text — requirements questions, conceptual choices, tradeoff lists, A/B/C/D text options, scope decisions
+## Files referenced
 
-A question about a UI topic is not automatically a visual question. "What does personality mean in this context?" is a conceptual question — use the terminal. "Which wizard layout works better?" is a visual question — use the browser.
-
-If they agree to the companion, read the detailed guide before proceeding:
-`skills/brainstorming/visual-companion.md`
+- `superpowers:resume-brainstorming` (mandatory first step)
+- `superpowers:multi-reviewer` (Phase B review loop)
+- `samples/specs/INDEX.md` and any sample file selected
+- `docs/superpowers/brainstorms/<filename>-brainstorm.md` (the decision log)
+- `docs/superpowers/specs/<filename>-design.md` (the produced spec)
+- `./visual-companion.md` (optional, when visual aids will help)
