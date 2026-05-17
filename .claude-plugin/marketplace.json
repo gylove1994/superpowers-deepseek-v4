@@ -1,19 +1,21 @@
 {
-  "name": "superpowers-dev",
-  "description": "Development marketplace for Superpowers core skills library",
+  "name": "gylove1994-superpowers-deepseek-v4",
+  "description": "Superpowers DeepSeek v4 — independent skills library optimized for DeepSeek-class models in design/spec/plan workflows; does not track obra/superpowers feature-for-feature.",
   "owner": {
-    "name": "Jesse Vincent",
-    "email": "jesse@fsck.com"
+    "name": "gylove1994",
+    "email": "gylove1994@acgsteps.com",
+    "url": "https://github.com/gylove1994"
   },
   "plugins": [
     {
       "name": "superpowers",
-      "description": "Core skills library for Claude Code: TDD, debugging, collaboration patterns, and proven techniques",
+      "description": "Superpowers DeepSeek v4: composable agent skills for TDD, debugging, and collaboration. Independently maintained; not identical to obra/superpowers.",
       "version": "5.1.0",
       "source": "./",
       "author": {
-        "name": "Jesse Vincent",
-        "email": "jesse@fsck.com"
+        "name": "gylove1994",
+        "email": "gylove1994@acgsteps.com",
+        "url": "https://github.com/gylove1994"
       }
     }
   ]

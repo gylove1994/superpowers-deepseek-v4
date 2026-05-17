@@ -1,233 +1,153 @@
-# Superpowers
+# Superpowers DeepSeek v4
 
-Superpowers is a complete software development methodology for your coding agents, built on top of a set of composable skills and some initial instructions that make sure your agent uses them.
+**Superpowers DeepSeek v4** is an agentic methodology and composable skills library for coding agents. It evolved from ideas in [obra/superpowers](https://github.com/obra/superpowers) but is **maintained independently**. Skills, hooks, install paths, and release cadence **are not guaranteed to match** the upstream project. Report issues and open pull requests **in this repository** if you use this variant.
 
 ## Quickstart
 
-Give your agent Superpowers: [Claude Code](#claude-code), [Codex CLI](#codex-cli), [Codex App](#codex-app), [Factory Droid](#factory-droid), [Gemini CLI](#gemini-cli), [OpenCode](#opencode), [Cursor](#cursor), [GitHub Copilot CLI](#github-copilot-cli).
+Install for your harness: [Claude Code](#claude-code) · [Codex CLI](#codex-cli) · [Codex App](#codex-app) · [Factory Droid](#factory-droid) · [Gemini CLI](#gemini-cli) · [OpenCode](#opencode) · [Cursor](#cursor) · [GitHub Copilot CLI](#github-copilot-cli)
 
 ## How it works
 
-It starts from the moment you fire up your coding agent. As soon as it sees that you're building something, it *doesn't* just jump into trying to write code. Instead, it steps back and asks you what you're really trying to do. 
-
-Once it's teased a spec out of the conversation, it shows it to you in chunks short enough to actually read and digest. 
-
-After you've signed off on the design, your agent puts together an implementation plan that's clear enough for an enthusiastic junior engineer with poor taste, no judgement, no project context, and an aversion to testing to follow. It emphasizes true red/green TDD, YAGNI (You Aren't Gonna Need It), and DRY. 
-
-Next up, once you say "go", it launches a *subagent-driven-development* process, having agents work through each engineering task, inspecting and reviewing their work, and continuing forward. It's not uncommon for Claude to be able to work autonomously for a couple hours at a time without deviating from the plan you put together.
-
-There's a bunch more to it, but that's the core of the system. And because the skills trigger automatically, you don't need to do anything special. Your coding agent just has Superpowers.
-
-
-## Sponsorship
-
-If Superpowers has helped you do stuff that makes money and you are so inclined, I'd greatly appreciate it if you'd consider [sponsoring my opensource work](https://github.com/sponsors/obra).
-
-Thanks! 
-
-- Jesse
-
+When you start building something, the agent does not immediately jump into code. It steps back, clarifies intent, and turns the conversation into a design you can read in sections. After you approve the design, it produces an implementation plan that a careful junior engineer could follow. It emphasizes red/green TDD, YAGNI, and DRY. When you say go, skills like **subagent-driven-development** drive execution with reviews and checkpoints. Skills are designed to trigger automatically—no manual “turn on superpowers” step.
 
 ## Installation
 
-Installation differs by harness. If you use more than one, install Superpowers separately for each one.
+Use **this repository** (`gylove1994/superpowers-deepseek-v4`) when copying install commands below. If you want the **upstream** [obra/superpowers](https://github.com/obra/superpowers) plugin instead, follow that project’s README; behavior and skills may differ.
 
-### Claude Code
+### Claude Code (this repo — recommended)
 
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
+From a clone of this repository, register the local marketplace and install the project-scoped plugin (see [.claude-plugin/marketplace.json](.claude-plugin/marketplace.json)):
 
-#### Official Marketplace
+```bash
+cd /path/to/superpowers-deepseek-v4
+/plugin marketplace add ./
+/plugin install superpowers@gylove1994-superpowers-deepseek-v4 --scope project
+```
 
-- Install the plugin from Anthropic's official marketplace:
+Or add `--scope user` if you want it available in every project.
 
-  ```bash
-  /plugin install superpowers@claude-plugins-official
-  ```
+#### Upstream reference (official Superpowers plugin)
 
-#### Superpowers Marketplace
+Anthropic’s catalog entry is not this fork. To install **upstream** Superpowers only:
 
-The Superpowers marketplace provides Superpowers and some other related plugins for Claude Code.
-
-- Register the marketplace:
-
-  ```bash
-  /plugin marketplace add obra/superpowers-marketplace
-  ```
-
-- Install the plugin from this marketplace:
-
-  ```bash
-  /plugin install superpowers@superpowers-marketplace
-  ```
+```bash
+/plugin install superpowers@claude-plugins-official
+```
 
 ### Codex CLI
 
-Superpowers is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
+Use the [official Codex plugin marketplace](https://github.com/openai/plugins). Search for Superpowers and install; confirm the package points at **this** repo if you intend to use DeepSeek v4–oriented skills.
 
-- Open the plugin search interface:
-
-  ```bash
-  /plugins
-  ```
-
-- Search for Superpowers:
-
-  ```bash
-  superpowers
-  ```
-
-- Select `Install Plugin`.
+```bash
+/plugins
+# search: superpowers
+```
 
 ### Codex App
 
-Superpowers is available via the [official Codex plugin marketplace](https://github.com/openai/plugins).
-
-- In the Codex app, click on Plugins in the sidebar.
-- You should see `Superpowers` in the Coding section.
-- Click the `+` next to Superpowers and follow the prompts.
+Same marketplace as Codex CLI: Plugins → find Superpowers → install. Verify source matches the repository you intend.
 
 ### Factory Droid
 
-- Register the marketplace:
+```bash
+droid plugin marketplace add https://github.com/gylove1994/superpowers-deepseek-v4
+droid plugin install superpowers@superpowers
+```
 
-  ```bash
-  droid plugin marketplace add https://github.com/obra/superpowers
-  ```
-
-- Install the plugin:
-
-  ```bash
-  droid plugin install superpowers@superpowers
-  ```
+(Adjust plugin id if your marketplace entry uses a different name.)
 
 ### Gemini CLI
 
-- Install the extension:
-
-  ```bash
-  gemini extensions install https://github.com/obra/superpowers
-  ```
-
-- Update later:
-
-  ```bash
-  gemini extensions update superpowers
-  ```
+```bash
+gemini extensions install https://github.com/gylove1994/superpowers-deepseek-v4
+gemini extensions update superpowers
+```
 
 ### OpenCode
 
-OpenCode uses its own plugin install; install Superpowers separately even if you
-already use it in another harness.
+OpenCode has its own install path. Use the copy of **this** repo’s instructions:
 
-- Tell OpenCode:
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/gylove1994/superpowers-deepseek-v4/main/.opencode/INSTALL.md
+```
 
-  ```
-  Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
-  ```
-
-- Detailed docs: [docs/README.opencode.md](docs/README.opencode.md)
+More detail: [.opencode/INSTALL.md](.opencode/INSTALL.md) and [docs/README.opencode.md](docs/README.opencode.md).
 
 ### Cursor
 
-- In Cursor Agent chat, install from marketplace:
+In Cursor Agent chat:
 
-  ```text
-  /add-plugin superpowers
-  ```
+```text
+/add-plugin superpowers
+```
 
-- Or search for "superpowers" in the plugin marketplace.
+Or search the marketplace for this project’s listing, if published.
 
 ### GitHub Copilot CLI
 
-- Register the marketplace:
+The default community marketplace ships the **upstream** Superpowers plugin. To use **this** repository, add a marketplace or install path that references `https://github.com/gylove1994/superpowers-deepseek-v4` (see GitHub Copilot CLI plugin docs for `marketplace add` / `plugin install` with a custom source). Example pattern if you mirror this repo into a marketplace entry:
 
-  ```bash
-  copilot plugin marketplace add obra/superpowers-marketplace
-  ```
+```bash
+copilot plugin marketplace add <YOUR_MARKETPLACE_OR_PATH_TO_THIS_REPO>
+copilot plugin install superpowers@<YOUR_ENTRY>
+```
 
-- Install the plugin:
-
-  ```bash
-  copilot plugin install superpowers@superpowers-marketplace
-  ```
+Verify the resolved plugin URL points at this fork before relying on DeepSeek v4–oriented behavior.
 
 ## The Basic Workflow
 
-1. **brainstorming** - Activates before writing code. Refines rough ideas through questions, explores alternatives, presents design in sections for validation. Saves design document.
+1. **brainstorming** — Before code: questions, alternatives, design in readable chunks; saves the design doc.
+2. **using-git-worktrees** — After design approval: isolated branch/workspace and clean test baseline.
+3. **writing-plans** — Turns the approved design into small tasks with paths and verification.
+4. **subagent-driven-development** or **executing-plans** — Executes the plan with reviews or batch checkpoints.
+5. **test-driven-development** — RED–GREEN–REFACTOR; failures first, minimal code, then refactor.
+6. **requesting-code-review** — Between tasks; severity and blockers.
+7. **finishing-a-development-branch** — Done: tests, merge/PR/keep/discard, worktree cleanup.
 
-2. **using-git-worktrees** - Activates after design approval. Creates isolated workspace on new branch, runs project setup, verifies clean test baseline.
-
-3. **writing-plans** - Activates with approved design. Breaks work into bite-sized tasks (2-5 minutes each). Every task has exact file paths, complete code, verification steps.
-
-4. **subagent-driven-development** or **executing-plans** - Activates with plan. Dispatches fresh subagent per task with two-stage review (spec compliance, then code quality), or executes in batches with human checkpoints.
-
-5. **test-driven-development** - Activates during implementation. Enforces RED-GREEN-REFACTOR: write failing test, watch it fail, write minimal code, watch it pass, commit. Deletes code written before tests.
-
-6. **requesting-code-review** - Activates between tasks. Reviews against plan, reports issues by severity. Critical issues block progress.
-
-7. **finishing-a-development-branch** - Activates when tasks complete. Verifies tests, presents options (merge/PR/keep/discard), cleans up worktree.
-
-**The agent checks for relevant skills before any task.** Mandatory workflows, not suggestions.
+The agent is expected to invoke relevant skills before and during work—this is workflow, not optional flavor text.
 
 ## What's Inside
 
-### Skills Library
+### Skills library (high level)
 
-**Testing**
-- **test-driven-development** - RED-GREEN-REFACTOR cycle (includes testing anti-patterns reference)
+**Testing** — **test-driven-development**
 
-**Debugging**
-- **systematic-debugging** - 4-phase root cause process (includes root-cause-tracing, defense-in-depth, condition-based-waiting techniques)
-- **verification-before-completion** - Ensure it's actually fixed
+**Debugging** — **systematic-debugging**, **verification-before-completion**
 
-**Collaboration** 
-- **brainstorming** - Socratic design refinement
-- **writing-plans** - Detailed implementation plans
-- **executing-plans** - Batch execution with checkpoints
-- **dispatching-parallel-agents** - Concurrent subagent workflows
-- **requesting-code-review** - Pre-review checklist
-- **receiving-code-review** - Responding to feedback
-- **using-git-worktrees** - Parallel development branches
-- **finishing-a-development-branch** - Merge/PR decision workflow
-- **subagent-driven-development** - Fast iteration with two-stage review (spec compliance, then code quality)
+**Collaboration** — **brainstorming**, **writing-plans**, **executing-plans**, **dispatching-parallel-agents**, **requesting-code-review**, **receiving-code-review**, **using-git-worktrees**, **finishing-a-development-branch**, **subagent-driven-development**
 
-**Meta**
-- **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
+**Meta** — **writing-skills**, **using-superpowers**
 
 ## Philosophy
 
-- **Test-Driven Development** - Write tests first, always
-- **Systematic over ad-hoc** - Process over guessing
-- **Complexity reduction** - Simplicity as primary goal
-- **Evidence over claims** - Verify before declaring success
+- Test-driven development first
+- Systematic investigation over guessing
+- Simplicity as a goal
+- Verify before claiming done
 
-Read [the original release announcement](https://blog.fsck.com/2025/10/09/superpowers/).
+Background on the original Superpowers announcement: [blog.fsck.com (Oct 2025)](https://blog.fsck.com/2025/10/09/superpowers/).
 
 ## Contributing
 
-The general contribution process for Superpowers is below. Keep in mind that we don't generally accept contributions of new skills and that any updates to skills must work across all of the coding agents we support.
+Contributions go through **this** repository. New skills and cross-harness behavior are reviewed strictly (see [CLAUDE.md](CLAUDE.md) and the PR template). Typical flow:
 
-1. Fork the repository
-2. Switch to the 'dev' branch
-3. Create a branch for your work
-4. Follow the `writing-skills` skill for creating and testing new and modified skills
-5. Submit a PR, being sure to fill in the pull request template.
-
-See `skills/writing-skills/SKILL.md` for the complete guide.
+1. Fork or branch from this repo  
+2. Use the `writing-skills` skill for skill changes  
+3. Open **one** focused PR with the template fully filled  
 
 ## Updating
 
-Superpowers updates are somewhat coding-agent dependent, but are often automatic.
+Plugin and harness updates vary by tool; some update automatically when you refresh marketplace or git-backed installs.
 
 ## License
 
-MIT License - see LICENSE file for details
+MIT — see [LICENSE](LICENSE).
 
-## Community
+## Community & attribution
 
-Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
+Maintained by [gylove1994](https://github.com/gylove1994). The original **Superpowers** project was created by [Jesse Vincent](https://blog.fsck.com) and [Prime Radiant](https://primeradiant.com). This fork appreciates that lineage; it does not imply endorsement or feature parity.
 
-- **Discord**: [Join us](https://discord.gg/35wsABTejz) for community support, questions, and sharing what you're building with Superpowers
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/superpowers/) to get notified about new versions
+- **Issues (this project):** https://github.com/gylove1994/superpowers-deepseek-v4/issues  
+- **Upstream project (reference):** https://github.com/obra/superpowers  
+
+Discord and release lists aimed at the upstream community may still be useful for general discussion; they are not the support channel for **this** fork’s behavior.

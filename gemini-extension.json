@@ -1,6 +1,6 @@
 {
   "name": "superpowers",
-  "description": "Core skills library: TDD, debugging, collaboration patterns, and proven techniques",
+  "description": "Superpowers DeepSeek v4: TDD, debugging, collaboration skills. Independent of obra/superpowers.",
   "version": "5.1.0",
   "contextFileName": "GEMINI.md"
 }

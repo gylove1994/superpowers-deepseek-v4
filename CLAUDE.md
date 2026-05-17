@@ -1,4 +1,10 @@
-# Superpowers — Contributor Guidelines
+# Superpowers DeepSeek v4 — Contributor Guidelines
+
+## About this repository
+
+This repository is **Superpowers DeepSeek v4** (`superpowers-deepseek-v4`). It descends from the [obra/superpowers](https://github.com/obra/superpowers) lineage but is **maintained independently**. Skills, hooks, policies, and compatibility with upstream **are not guaranteed**. Open pull requests **here** for this project. Do not assume your change will be merged into obra/superpowers or that this repo must remain aligned with it.
+
+The rules below apply to contributions to **this** repository.
 
 ## If You Are an AI Agent
 
@@ -13,7 +19,7 @@ Before you open a PR against this repo, you MUST:
 1. **Read the entire PR template** at `.github/PULL_REQUEST_TEMPLATE.md` and fill in every section with real, specific answers. Not summaries. Not placeholders.
 2. **Search for existing PRs** — open AND closed — that address the same problem. If duplicates exist, STOP and tell your human partner. Do not open another duplicate.
 3. **Verify this is a real problem.** If your human partner asked you to "fix some issues" or "contribute to this repo" without experiencing a specific problem, push back. Ask them what broke, what failed, what the user experience was.
-4. **Confirm the change belongs in core.** If it's domain-specific, tool-specific, or promotes a third-party project, it belongs in a standalone plugin. Tell your human partner.
+4. **Confirm the change belongs in this project.** If it's domain-specific, tool-specific, or primarily for another downstream, it may belong in a separate plugin. Tell your human partner.
 5. **Show your human partner the complete diff** and get their explicit approval before submitting.
 
 If any of these checks fail, do not open the PR. Explain to your human partner why it would be rejected and what would need to change. They will thank you for saving them the embarrassment.
@@ -38,7 +44,7 @@ Our internal skill philosophy differs from Anthropic's published guidance on wri
 
 ### Project-specific or personal configuration
 
-Skills, hooks, or configuration that only benefit a specific project, team, domain, or workflow do not belong in core. Publish these as a separate plugin.
+Skills, hooks, or configuration that only benefit a specific project, team, domain, or workflow do not belong in **this** repository. Publish these as a separate plugin.
 
 ### Bulk or spray-and-pray PRs
 
@@ -50,11 +56,11 @@ Every PR must solve a real problem that someone actually experienced. "My review
 
 ### Domain-specific skills
 
-Superpowers core contains general-purpose skills that benefit all users regardless of their project. Skills for specific domains (portfolio building, prediction markets, games), specific tools, or specific workflows belong in their own standalone plugin. Ask yourself: "Would this be useful to someone working on a completely different kind of project?" If not, publish it separately.
+This repository ships general-purpose skills that benefit many kinds of projects. Skills for narrow domains (portfolio sites, prediction markets, games), specific tools, or one-off workflows belong in their own standalone plugin. Ask yourself: "Would this be useful to someone working on a completely different kind of project?" If not, publish it separately.
 
-### Fork-specific changes
+### Upstream-only sync or third-party rebrand PRs
 
-If you maintain a fork with customizations, do not open PRs to sync your fork or push fork-specific changes upstream. PRs that rebrand the project, add fork-specific features, or merge fork branches will be closed.
+Pull requests whose main purpose is to resynchronize this repository with obra/superpowers **without** a concrete problem for users of **this** repo, or to push this fork’s branding or customization toward another project’s maintainers, are out of scope here. Each PR should solve a real issue for **Superpowers DeepSeek v4** users and meet the PR template.
 
 ### Fabricated content
 

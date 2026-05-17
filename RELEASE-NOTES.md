@@ -1,5 +1,7 @@
 # Superpowers Release Notes
 
+*Historical changelog carried in this repository for reference. For the current project positioning of **Superpowers DeepSeek v4**, see [README.md](README.md).*
+
 ## v5.1.0 (2026-04-30)
 
 ### Removals

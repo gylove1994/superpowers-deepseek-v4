@@ -1,6 +1,6 @@
-# Superpowers for OpenCode
+# Superpowers DeepSeek v4 for OpenCode
 
-Complete guide for using Superpowers with [OpenCode.ai](https://opencode.ai).
+Guide for using **Superpowers DeepSeek v4** with [OpenCode.ai](https://opencode.ai). This fork is maintained independently from [obra/superpowers](https://github.com/obra/superpowers).
 
 ## Installation
 
@@ -8,7 +8,7 @@ Add superpowers to the `plugin` array in your `opencode.json` (global or project
 
 ```json
 {
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"]
+  "plugin": ["superpowers@git+https://github.com/gylove1994/superpowers-deepseek-v4.git"]
 }
 ```
 
@@ -91,7 +91,7 @@ To pin a specific version, use a branch or tag:
 
 ```json
 {
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git#v5.0.3"]
+  "plugin": ["superpowers@git+https://github.com/gylove1994/superpowers-deepseek-v4.git#main"]
 }
 ```
 
@@ -128,7 +128,7 @@ the plugin, try installing with system npm and pointing OpenCode at the local
 package:
 
 ```powershell
-npm install superpowers@git+https://github.com/obra/superpowers.git --prefix "$HOME\.config\opencode"
+npm install superpowers@git+https://github.com/gylove1994/superpowers-deepseek-v4.git --prefix "$HOME\.config\opencode"
 ```
 
 Then use the installed package path in `opencode.json`:
@@ -152,6 +152,6 @@ Then use the installed package path in `opencode.json`:
 
 ## Getting Help
 
-- Report issues: https://github.com/obra/superpowers/issues
-- Main documentation: https://github.com/obra/superpowers
+- Report issues: https://github.com/gylove1994/superpowers-deepseek-v4/issues
+- Main documentation: https://github.com/gylove1994/superpowers-deepseek-v4
 - OpenCode docs: https://opencode.ai/docs/

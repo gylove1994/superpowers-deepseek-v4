@@ -15,18 +15,15 @@ of human involvement will be closed without review.
 ## What does this PR change?
 <!-- 1-3 sentences. What, not why — the "why" belongs above. -->
 
-## Is this change appropriate for the core library?
-<!-- Superpowers core contains general-purpose skills and infrastructure
-     that benefit all users. Ask yourself:
+## Is this change appropriate for Superpowers DeepSeek v4?
+<!-- This repository is independent of obra/superpowers. Ask yourself:
 
-     - Would this be useful to someone working on a completely different
-       kind of project than yours?
-     - Is this project-specific, team-specific, or tool-specific?
-     - Does this integrate or promote a third-party service?
+     - Does this solve a real problem for users of THIS repo?
+     - Would it still make sense for someone on a completely different project?
+     - Is it domain- or tool-specific in a way that belongs in a separate plugin?
+     - Do not assume this PR will be contributed back to obra/superpowers.
 
-     If your change is a new skill for a specific domain, workflow tool,
-     or third-party integration, it belongs in its own plugin — not here.
-     See the plugin development docs for how to publish it separately. -->
+     Narrow or third-party-specific work usually belongs in its own plugin. -->
 
 ## What alternatives did you consider?
 <!-- What other approaches did you try or evaluate before landing on this

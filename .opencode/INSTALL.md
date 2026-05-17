@@ -1,4 +1,4 @@
-# Installing Superpowers for OpenCode
+# Installing Superpowers DeepSeek v4 for OpenCode
 
 ## Prerequisites
 
@@ -10,7 +10,7 @@ Add superpowers to the `plugin` array in your `opencode.json` (global or project
 
 ```json
 {
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"]
+  "plugin": ["superpowers@git+https://github.com/gylove1994/superpowers-deepseek-v4.git"]
 }
 ```
 
@@ -59,7 +59,7 @@ To pin a specific version:
 
 ```json
 {
-  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git#v5.0.3"]
+  "plugin": ["superpowers@git+https://github.com/gylove1994/superpowers-deepseek-v4.git#main"]
 }
 ```
 
@@ -80,7 +80,7 @@ the plugin, try installing with system npm and pointing OpenCode at the local
 package:
 
 ```powershell
-npm install superpowers@git+https://github.com/obra/superpowers.git --prefix "$HOME\.config\opencode"
+npm install superpowers@git+https://github.com/gylove1994/superpowers-deepseek-v4.git --prefix "$HOME\.config\opencode"
 ```
 
 Then use the installed package path in `opencode.json`:
@@ -106,5 +106,5 @@ When skills reference Claude Code tools:
 
 ## Getting Help
 
-- Report issues: https://github.com/obra/superpowers/issues
-- Full documentation: https://github.com/obra/superpowers/blob/main/docs/README.opencode.md
+- Report issues: https://github.com/gylove1994/superpowers-deepseek-v4/issues
+- Full documentation: https://github.com/gylove1994/superpowers-deepseek-v4/blob/main/docs/README.opencode.md
