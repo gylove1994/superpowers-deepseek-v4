@@ -6,8 +6,8 @@
 
 ### Removals
 
-- **Legacy slash commands removed** — `/brainstorm`, `/execute-plan`, and `/write-plan` are gone. They were deprecated stubs that did nothing but tell the user to invoke the corresponding skill. Invoke `superpowers:brainstorming`, `superpowers:executing-plans`, and `superpowers:writing-plans` directly instead. (#1188)
-- **`superpowers:code-reviewer` named agent removed** — the agent was the plugin's only named agent and was used by exactly two skills, while every other reviewer/implementer subagent in the repo dispatches `general-purpose` with a prompt template alongside its skill. The agent's persona and checklist have been merged into `skills/requesting-code-review/code-reviewer.md` as a self-contained Task-dispatch template. Anyone dispatching `Task (superpowers:code-reviewer)` should switch to `Task (general-purpose)` with the prompt template instead. (PR #1299)
+- **Legacy slash commands removed** — `/brainstorm`, `/execute-plan`, and `/write-plan` are gone. They were deprecated stubs that did nothing but tell the user to invoke the corresponding skill. Invoke `superpowers-deepseek-v4:brainstorming`, `superpowers-deepseek-v4:executing-plans`, and `superpowers-deepseek-v4:writing-plans` directly instead. (#1188)
+- **`superpowers-deepseek-v4:code-reviewer` named agent removed** — the agent was the plugin's only named agent and was used by exactly two skills, while every other reviewer/implementer subagent in the repo dispatches `general-purpose` with a prompt template alongside its skill. The agent's persona and checklist have been merged into `skills/requesting-code-review/code-reviewer.md` as a self-contained Task-dispatch template. Anyone dispatching `Task (superpowers-deepseek-v4:code-reviewer)` should switch to `Task (general-purpose)` with the prompt template instead. (PR #1299)
 - **Integration sections removed from skills** — these were a legacy of the time before agents had native skills systems and didn't help with steering.
 
 ### Worktree Skills Rewrite
@@ -354,7 +354,7 @@ Design-for-isolation and file-size-awareness guidance added to brainstorming, wr
 
 **Instruction priority hierarchy**
 
-Added explicit priority ordering to using-superpowers:
+Added explicit priority ordering to using-superpowers-deepseek-v4:
 
 1. User's explicit instructions (CLAUDE.md, AGENTS.md, direct requests) — highest priority
 2. Superpowers skills — override default system behavior
@@ -570,7 +570,7 @@ New test suite in `tests/explicit-skill-requests/` that verifies Claude correctl
 
 Added `disable-model-invocation: true` to all three slash commands (`/brainstorm`, `/execute-plan`, `/write-plan`). Claude can no longer invoke these commands via the Skill tool—they're restricted to manual user invocation only.
 
-The underlying skills (`superpowers:brainstorming`, `superpowers:executing-plans`, `superpowers:writing-plans`) remain available for Claude to invoke autonomously. This change prevents confusion when Claude would invoke a command that just redirects to a skill anyway.
+The underlying skills (`superpowers-deepseek-v4:brainstorming`, `superpowers-deepseek-v4:executing-plans`, `superpowers-deepseek-v4:writing-plans`) remain available for Claude to invoke autonomously. This change prevents confusion when Claude would invoke a command that just redirects to a skill anyway.
 
 ## v4.0.1 (2025-12-23)
 
@@ -582,7 +582,7 @@ Fixed a confusing pattern where Claude would invoke a skill via the Skill tool, 
 
 - Added "How to Access Skills" section to `using-superpowers`
 - Changed "read the skill" → "invoke the skill" in instructions
-- Updated slash commands to use fully qualified skill names (e.g., `superpowers:brainstorming`)
+- Updated slash commands to use fully qualified skill names (e.g., `superpowers-deepseek-v4:brainstorming`)
 
 **Added GitHub thread reply guidance to receiving-code-review** (h/t @ralphbean)
 
@@ -761,7 +761,7 @@ Description changed to imperative: "You MUST use this before any creative work�
 **Experimental Codex Support**
 - Added unified `superpowers-codex` script with bootstrap/use-skill/find-skills commands
 - Cross-platform Node.js implementation (works on Windows, macOS, Linux)
-- Namespaced skills: `superpowers:skill-name` for superpowers skills, `skill-name` for personal
+- Namespaced skills: `superpowers-deepseek-v4:skill-name` for superpowers skills, `skill-name` for personal
 - Personal skills override superpowers skills when names match
 - Clean skill display: shows name/description without raw frontmatter
 - Helpful context: shows supporting files directory for each skill
@@ -824,16 +824,16 @@ These changes address observed agent behavior where they rationalize around skil
 ### New Features
 
 **Code reviewer agent now included in plugin**
-- Added `superpowers:code-reviewer` agent to plugin's `agents/` directory
+- Added `superpowers-deepseek-v4:code-reviewer` agent to plugin's `agents/` directory
 - Agent provides systematic code review against plans and coding standards
 - Previously required users to have personal agent configuration
-- All skill references updated to use namespaced `superpowers:code-reviewer`
+- All skill references updated to use namespaced `superpowers-deepseek-v4:code-reviewer`
 - Fixes #55
 
 ### Files Changed
 - New: `agents/code-reviewer.md` - Agent definition with review checklist and output format
-- Updated: `skills/requesting-code-review/SKILL.md` - References to `superpowers:code-reviewer`
-- Updated: `skills/subagent-driven-development/SKILL.md` - References to `superpowers:code-reviewer`
+- Updated: `skills/requesting-code-review/SKILL.md` - References to `superpowers-deepseek-v4:code-reviewer`
+- Updated: `skills/subagent-driven-development/SKILL.md` - References to `superpowers-deepseek-v4:code-reviewer`
 
 ## v3.2.0 (2025-10-18)
 
@@ -849,8 +849,8 @@ These changes address observed agent behavior where they rationalize around skil
 ### Breaking Changes
 
 **Skill reference namespace standardization**
-- All internal skill references now use `superpowers:` namespace prefix
-- Updated format: `superpowers:test-driven-development` (previously just `test-driven-development`)
+- All internal skill references now use `superpowers-deepseek-v4:` namespace prefix
+- Updated format: `superpowers-deepseek-v4:test-driven-development` (previously just `test-driven-development`)
 - Affects all REQUIRED SUB-SKILL, RECOMMENDED SUB-SKILL, and REQUIRED BACKGROUND references
 - Aligns with how skills are invoked using the Skill tool
 - Files updated: brainstorming, executing-plans, subagent-driven-development, systematic-debugging, testing-skills-with-subagents, writing-plans, writing-skills
@@ -866,7 +866,7 @@ These changes address observed agent behavior where they rationalize around skil
 
 ### Bug Fixes
 
-- **Fixed command syntax in README** (#44) - Updated all command references to use correct namespaced syntax (`/superpowers:brainstorm` instead of `/brainstorm`). Plugin-provided commands are automatically namespaced by Claude Code to avoid conflicts between plugins.
+- **Fixed command syntax in README** (#44) - Updated all command references to use correct namespaced syntax (`/superpowers-deepseek-v4:brainstorm` instead of `/brainstorm`). Plugin-provided commands are automatically namespaced by Claude Code to avoid conflicts between plugins.
 
 ## v3.1.0 (2025-10-17)
 

@@ -1,6 +1,6 @@
 # DeepSeek-V4-Pro Optimization Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-deepseek-v4:subagent-driven-development (recommended) or superpowers-deepseek-v4:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add multi-reviewer review subsystem, exemplar samples library, decision log / plan-progress tracking, and resume SKILLs to this fork; rewrite `brainstorming` and `writing-plans` to integrate them. Target: stabilize ds-v4-pro's spec/plan quality and avoid single-context blind spots.
 
@@ -1921,7 +1921,7 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 
 ## Step 0 (strict first step): Invoke resume-brainstorming
 
-Always invoke `superpowers:resume-brainstorming` first. It either:
+Always invoke `superpowers-deepseek-v4:resume-brainstorming` first. It either:
 - Returns `proceed-with-new-empty` (no existing decision logs) → continue to Step 1 with a fresh file.
 - Returns the path of an In Progress file to continue → skip to the matching point in the flow per the resume table.
 - Returns the path of a new file (Based On a Done or Abandoned file) plus prior-discussion context → continue to Step 1, but treat the prior content as established background instead of starting from zero.
@@ -2000,7 +2000,7 @@ After writing, update the decision log's Phase B Spec Writing Status: `[✓] Ini
 
 ## Step 7: Multi-reviewer loop
 
-Invoke `superpowers:multi-reviewer`. Pass:
+Invoke `superpowers-deepseek-v4:multi-reviewer`. Pass:
 - The draft (the spec file you just wrote).
 - The matched samples (0–2) so exemplar-matcher reviewers can be dispatched, one per sample.
 - The decision-log file path so the subsystem can update Receipt Status, Findings table, Arbiter Output, and Appendix.
@@ -2043,7 +2043,7 @@ When the user approves:
 
 After commit, tell the user: "Spec committed at `<path>`. Ready to move to implementation planning? I can invoke writing-plans now."
 
-If the user agrees, invoke `superpowers:writing-plans`. Do not invoke any other implementation skill.
+If the user agrees, invoke `superpowers-deepseek-v4:writing-plans`. Do not invoke any other implementation skill.
 
 ## Abandonment
 
@@ -2070,8 +2070,8 @@ The `visual-companion.md` and `scripts/` from the previous version of this SKILL
 
 ## Files referenced
 
-- `superpowers:resume-brainstorming` (mandatory first step)
-- `superpowers:multi-reviewer` (Phase B review loop)
+- `superpowers-deepseek-v4:resume-brainstorming` (mandatory first step)
+- `superpowers-deepseek-v4:multi-reviewer` (Phase B review loop)
 - `samples/specs/INDEX.md` and any sample file selected
 - `docs/superpowers/brainstorms/<filename>-brainstorm.md` (the decision log)
 - `docs/superpowers/specs/<filename>-design.md` (the produced spec)
@@ -2134,7 +2134,7 @@ git commit -m "refactor(brainstorming): remove single-reviewer prompt
 The spec-document-reviewer-prompt.md was the previous single-reviewer
 mechanism. It is superseded by the multi-reviewer subsystem with 4–6
 reviewers and an arbiter. brainstorming/SKILL.md now invokes
-superpowers:multi-reviewer for Phase B review."
+superpowers-deepseek-v4:multi-reviewer for Phase B review."
 ```
 
 ---
@@ -2166,7 +2166,7 @@ Track the full spec-to-plan process in a `*-plan-progress.md` file. Mid-process 
 
 ## Step 0 (strict first step): Invoke resume-planning
 
-Always invoke `superpowers:resume-planning` first. It:
+Always invoke `superpowers-deepseek-v4:resume-planning` first. It:
 1. Forces selection of a Done source spec.
 2. Scans existing plan-progress files for that spec.
 3. Returns one of:
@@ -2212,7 +2212,7 @@ The plan must:
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-deepseek-v4:subagent-driven-development (recommended) or superpowers-deepseek-v4:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence]
 
@@ -2238,7 +2238,7 @@ After writing, update the plan-progress file: `[✓] Initial draft complete (tim
 
 ## Step 5: Multi-reviewer loop
 
-Invoke `superpowers:multi-reviewer`. Pass:
+Invoke `superpowers-deepseek-v4:multi-reviewer`. Pass:
 - The draft (the plan file).
 - The matched samples (0–2).
 - The plan-progress file path.
@@ -2288,8 +2288,8 @@ Offer the user the execution choice (preserved from previous writing-plans behav
 >
 > Which approach?"
 
-- If Subagent-Driven → invoke `superpowers:subagent-driven-development`.
-- If Inline → invoke `superpowers:executing-plans`.
+- If Subagent-Driven → invoke `superpowers-deepseek-v4:subagent-driven-development`.
+- If Inline → invoke `superpowers-deepseek-v4:executing-plans`.
 
 ## Abandonment
 
@@ -2304,12 +2304,12 @@ Same as brainstorming abandonment: set `Status: Abandoned`, append `## Abandonme
 
 ## Files referenced
 
-- `superpowers:resume-planning` (mandatory first step)
-- `superpowers:multi-reviewer` (review loop)
+- `superpowers-deepseek-v4:resume-planning` (mandatory first step)
+- `superpowers-deepseek-v4:multi-reviewer` (review loop)
 - `samples/plans/INDEX.md` and any sample file selected
 - `docs/superpowers/brainstorms/<filename>-plan-progress.md` (the progress file)
 - `docs/superpowers/plans/<filename>.md` (the produced plan)
-- `superpowers:subagent-driven-development` or `superpowers:executing-plans` (execution handoff)
+- `superpowers-deepseek-v4:subagent-driven-development` or `superpowers-deepseek-v4:executing-plans` (execution handoff)
 ```
 
 - [ ] **Step 2: Self-check structure**
@@ -2361,7 +2361,7 @@ git rm skills/writing-plans/plan-document-reviewer-prompt.md
 ```bash
 git commit -m "refactor(writing-plans): remove single-reviewer prompt
 
-Superseded by superpowers:multi-reviewer."
+Superseded by superpowers-deepseek-v4:multi-reviewer."
 ```
 
 ---

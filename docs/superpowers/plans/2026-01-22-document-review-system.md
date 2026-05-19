@@ -1,6 +1,6 @@
 # Document Review System Implementation Plan
 
-> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan.
+> **For agentic workers:** REQUIRED: Use superpowers-deepseek-v4:subagent-driven-development (if subagents available) or superpowers-deepseek-v4:executing-plans to implement this plan.
 
 **Goal:** Add spec and plan document review loops to the brainstorming and writing-plans skills.
 
@@ -285,7 +285,7 @@ Run: `grep -A 20 "Plan Document Header" skills/writing-plans/SKILL.md`
 The plan header should note that tasks and steps use checkbox syntax. Update the header comment:
 
 ```markdown
-> **For agentic workers:** REQUIRED: Use superpowers:subagent-driven-development (if subagents available) or superpowers:executing-plans to implement this plan. Tasks and steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED: Use superpowers-deepseek-v4:subagent-driven-development (if subagents available) or superpowers-deepseek-v4:executing-plans to implement this plan. Tasks and steps use checkbox (`- [ ]`) syntax for tracking.
 ```
 
 - [ ] **Step 3:** Verify the change

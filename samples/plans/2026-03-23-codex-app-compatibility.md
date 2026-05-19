@@ -1,6 +1,6 @@
 # Codex App Compatibility Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-deepseek-v4:subagent-driven-development (recommended) or superpowers-deepseek-v4:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make `using-git-worktrees`, `finishing-a-development-branch`, and related skills work in the Codex App's sandboxed worktree environment without breaking existing behavior.
 
@@ -289,22 +289,22 @@ Options 1 and 4 only, matching Quick Reference and Common Mistakes."
 
 Change line 268 from:
 ```
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers-deepseek-v4:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 ```
 To:
 ```
-- **superpowers:using-git-worktrees** - REQUIRED: Ensures isolated workspace (creates one or verifies existing)
+- **superpowers-deepseek-v4:using-git-worktrees** - REQUIRED: Ensures isolated workspace (creates one or verifies existing)
 ```
 
 - [ ] **Step 2: Update `executing-plans`**
 
 Change line 68 from:
 ```
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers-deepseek-v4:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 ```
 To:
 ```
-- **superpowers:using-git-worktrees** - REQUIRED: Ensures isolated workspace (creates one or verifies existing)
+- **superpowers-deepseek-v4:using-git-worktrees** - REQUIRED: Ensures isolated workspace (creates one or verifies existing)
 ```
 
 - [ ] **Step 3: Verify both files**

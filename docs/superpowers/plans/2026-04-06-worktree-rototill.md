@@ -1,6 +1,6 @@
 # Worktree Rototill Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-deepseek-v4:subagent-driven-development (recommended) or superpowers-deepseek-v4:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Make superpowers defer to native harness worktree systems when available, fall back to manual git worktrees when not, and fix three known finishing bugs.
 
@@ -780,13 +780,13 @@ One-line changes to three files that reference `using-git-worktrees`.
 In `skills/executing-plans/SKILL.md`, change line 68 from:
 
 ```markdown
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers-deepseek-v4:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 ```
 
 to:
 
 ```markdown
-- **superpowers:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
+- **superpowers-deepseek-v4:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
 ```
 
 - [ ] **Step 2: Update subagent-driven-development integration line**
@@ -794,13 +794,13 @@ to:
 In `skills/subagent-driven-development/SKILL.md`, change line 268 from:
 
 ```markdown
-- **superpowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
+- **superpowers-deepseek-v4:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 ```
 
 to:
 
 ```markdown
-- **superpowers:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
+- **superpowers-deepseek-v4:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
 ```
 
 - [ ] **Step 3: Update writing-plans context line**

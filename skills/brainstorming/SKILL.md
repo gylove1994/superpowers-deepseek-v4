@@ -20,7 +20,7 @@ Do NOT invoke any implementation skill, write any code, scaffold any project, or
 
 ## Step 0 (strict first step): Invoke resume-brainstorming
 
-Always invoke `superpowers:resume-brainstorming` first. It either:
+Always invoke `superpowers-deepseek-v4:resume-brainstorming` first. It either:
 - Returns `proceed-with-new-empty` (no existing decision logs) → continue to Step 1 with a fresh file.
 - Returns the path of an In Progress file to continue → skip to the matching point in the flow per the resume table.
 - Returns the path of a new file (Based On a Done or Abandoned file) plus prior-discussion context → continue to Step 1, but treat the prior content as established background instead of starting from zero.
@@ -99,7 +99,7 @@ After writing, update the decision log's Phase B Spec Writing Status: `[✓] Ini
 
 ## Step 7: Multi-reviewer loop
 
-Invoke `superpowers:multi-reviewer`. Pass:
+Invoke `superpowers-deepseek-v4:multi-reviewer`. Pass:
 - The draft (the spec file you just wrote).
 - The matched samples (0–2) so exemplar-matcher reviewers can be dispatched, one per sample.
 - The decision-log file path so the subsystem can update Receipt Status, Findings table, Arbiter Output, and Appendix.
@@ -142,7 +142,7 @@ When the user approves:
 
 After commit, tell the user: "Spec committed at `<path>`. Ready to move to implementation planning? I can invoke writing-plans now."
 
-If the user agrees, invoke `superpowers:writing-plans`. Do not invoke any other implementation skill.
+If the user agrees, invoke `superpowers-deepseek-v4:writing-plans`. Do not invoke any other implementation skill.
 
 ## Abandonment
 
@@ -169,8 +169,8 @@ The `visual-companion.md` and `scripts/` from the previous version of this SKILL
 
 ## Files referenced
 
-- `superpowers:resume-brainstorming` (mandatory first step)
-- `superpowers:multi-reviewer` (Phase B review loop)
+- `superpowers-deepseek-v4:resume-brainstorming` (mandatory first step)
+- `superpowers-deepseek-v4:multi-reviewer` (Phase B review loop)
 - `samples/specs/INDEX.md` and any sample file selected
 - `docs/superpowers/brainstorms/<filename>-brainstorm.md` (the decision log)
 - `docs/superpowers/specs/<filename>-design.md` (the produced spec)

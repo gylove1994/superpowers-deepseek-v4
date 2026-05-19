@@ -143,11 +143,11 @@ Otherwise, check and remove as today. Note: the existing Step 5 text says "For O
 
 Both skills have an identical Integration section line. Change from:
 ```
-- superpowers:using-git-worktrees - REQUIRED: Set up isolated workspace before starting
+- superpowers-deepseek-v4:using-git-worktrees - REQUIRED: Set up isolated workspace before starting
 ```
 To:
 ```
-- superpowers:using-git-worktrees - REQUIRED: Ensures isolated workspace (creates one or verifies existing)
+- superpowers-deepseek-v4:using-git-worktrees - REQUIRED: Ensures isolated workspace (creates one or verifies existing)
 ```
 
 **Everything else unchanged:** Dispatch/review loop, prompt templates, model selection, status handling, red flags.

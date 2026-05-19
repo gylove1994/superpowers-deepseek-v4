@@ -13,7 +13,7 @@ Track the full spec-to-plan process in a `*-plan-progress.md` file. Mid-process 
 
 ## Step 0 (strict first step): Invoke resume-planning
 
-Always invoke `superpowers:resume-planning` first. It:
+Always invoke `superpowers-deepseek-v4:resume-planning` first. It:
 1. Forces selection of a Done source spec.
 2. Scans existing plan-progress files for that spec.
 3. Returns one of:
@@ -59,7 +59,7 @@ The plan must:
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers-deepseek-v4:subagent-driven-development (recommended) or superpowers-deepseek-v4:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** [One sentence]
 
@@ -85,7 +85,7 @@ After writing, update the plan-progress file: `[✓] Initial draft complete (tim
 
 ## Step 5: Multi-reviewer loop
 
-Invoke `superpowers:multi-reviewer`. Pass:
+Invoke `superpowers-deepseek-v4:multi-reviewer`. Pass:
 - The draft (the plan file).
 - The matched samples (0–2).
 - The plan-progress file path.
@@ -135,8 +135,8 @@ Offer the user the execution choice (preserved from previous writing-plans behav
 >
 > Which approach?"
 
-- If Subagent-Driven → invoke `superpowers:subagent-driven-development`.
-- If Inline → invoke `superpowers:executing-plans`.
+- If Subagent-Driven → invoke `superpowers-deepseek-v4:subagent-driven-development`.
+- If Inline → invoke `superpowers-deepseek-v4:executing-plans`.
 
 ## Abandonment
 
@@ -151,9 +151,9 @@ Same as brainstorming abandonment: set `Status: Abandoned`, append `## Abandonme
 
 ## Files referenced
 
-- `superpowers:resume-planning` (mandatory first step)
-- `superpowers:multi-reviewer` (review loop)
+- `superpowers-deepseek-v4:resume-planning` (mandatory first step)
+- `superpowers-deepseek-v4:multi-reviewer` (review loop)
 - `samples/plans/INDEX.md` and any sample file selected
 - `docs/superpowers/brainstorms/<filename>-plan-progress.md` (the progress file)
 - `docs/superpowers/plans/<filename>.md` (the produced plan)
-- `superpowers:subagent-driven-development` or `superpowers:executing-plans` (execution handoff)
+- `superpowers-deepseek-v4:subagent-driven-development` or `superpowers-deepseek-v4:executing-plans` (execution handoff)
