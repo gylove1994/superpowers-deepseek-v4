@@ -85,7 +85,7 @@ Read `samples/specs/INDEX.md`. Semantically match the current task against each 
 - Select up to 2 most relevant samples.
 - Tell the user: "Selected sample(s) `<filenames>` as references because <reason>. Proceeding."
 - If the user objects, accept overrides (different sample, no sample, etc.).
-- If 0 samples are selected (no good matches), record this; the multi-reviewer subsystem will run with 4 reviewers only.
+- If 0 samples are selected (no good matches), record this; the multi-reviewer subsystem will run with 6 fixed reviewers (plus 0–2 exemplar-matchers).
 
 Load the chosen samples' full content into your context.
 
@@ -93,7 +93,7 @@ Load the chosen samples' full content into your context.
 
 Write `docs/superpowers/specs/<today>-<topic-slug>-design.md` from scratch. Use the Alignment Summary as your input. Use the matched samples as structural references.
 
-The spec should contain: Problem, Goals, Non-Goals, Design Principles, Design (with subsections per major component), Implementation Phases, Testing Strategy, File Inventory, Out of Scope. Adjust to suit the topic.
+The spec should contain, in order: Problem, Goals, Non-Goals, Design Principles, **Acceptance Scenarios** (Gherkin Feature/Scenario/Given/When/Then blocks — mandatory, placed here), Design (with subsections per major component), Implementation Phases, Testing Strategy, File Inventory, Out of Scope. Adjust subsection depth to suit the topic; do not omit Acceptance Scenarios.
 
 After writing, update the decision log's Phase B Spec Writing Status: `[✓] Initial draft complete (time: <now>)`. Update `Current Phase: review_round_1`.
 
