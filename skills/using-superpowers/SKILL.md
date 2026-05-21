@@ -20,9 +20,9 @@ This fork is NOT a drop-in replacement of upstream. Several core SKILLs have bee
 
 2. **`writing-plans` is rewritten.** Step 0 strictly invokes `superpowers-deepseek-v4:resume-planning`, which forces a mandatory source-spec selection from `Done` brainstorming sessions. Progress is tracked in `docs/superpowers/brainstorms/<date>-<topic-slug>-plan-progress.md`. Reviews go through the multi-reviewer subsystem.
 
-3. **NEW SKILL `superpowers-deepseek-v4:multi-reviewer`** — replaces the old single-reviewer prompts. Dispatches 4 fixed reviewers (architect, red-team, edge-cases, yagni-gatekeeper) + 0–2 exemplar-matchers in parallel, plus an arbiter that filters / dedups / arbitrates. Has 5-layer convergence rules (50% degradation check + 3-round hard cap) and a user-arbitration handoff for unresolved findings. Called by both `brainstorming` (Phase B) and `writing-plans`.
+3. **NEW SKILL `superpowers-deepseek-v4:multi-reviewer`** — replaces the old single-reviewer prompts. Dispatches 6 fixed reviewers (architect, red-team, edge-cases, yagni-gatekeeper, bdd-reviewer, tdd-reviewer) + 0–2 exemplar-matchers in parallel, plus an arbiter that filters / dedups / arbitrates. Has 5-layer convergence rules (50% degradation check + 3-round hard cap) and a user-arbitration handoff for unresolved findings. Called by both `brainstorming` (Phase B) and `writing-plans`.
 
-4. **NEW exemplar samples library** at `samples/specs/` + `samples/plans/`, indexed by `INDEX.md`. Both `brainstorming` Phase B and `writing-plans` match the current task against the INDEX (cap 2 samples) before drafting; each matched sample also spawns one dedicated `exemplar-matcher` reviewer in the multi-reviewer loop. Zero matches → multi-reviewer runs with 4 reviewers instead of 5–6.
+4. **NEW exemplar samples library** at `samples/specs/` + `samples/plans/`, indexed by `INDEX.md`. Both `brainstorming` Phase B and `writing-plans` match the current task against the INDEX (cap 2 samples) before drafting; each matched sample also spawns one dedicated `exemplar-matcher` reviewer in the multi-reviewer loop. Zero matches → multi-reviewer runs with 6 fixed reviewers (plus 0–2 exemplar-matchers).
 
 5. **NEW SKILL `superpowers-deepseek-v4:managing-samples`** — STRICTLY user-driven. Use ONLY when the user explicitly says "initialize the samples library" or "add `<file>` as a sample". Never auto-trigger; never proactively recommend "save this as a sample".
 
@@ -56,7 +56,7 @@ After the announcement, proceed with the user's actual request following the nor
 > 与原版的关键差异：
 > - `brainstorming` 改为两阶段：Phase A 与你做对齐 Q&A，Phase B 由 agent 写 spec 并跑多评审 loop；Step 0 强制调用 `resume-brainstorming`。
 > - `writing-plans` 重写：Step 0 强制调用 `resume-planning` 并强制选择源 spec；进度记录到 `*-plan-progress.md`。
-> - 新增 `multi-reviewer` 子系统：4 固定 reviewer + 0–2 模范样本 matcher + arbiter 并行评审，含收敛规则与用户仲裁。
+> - 新增 `multi-reviewer` 子系统：6 固定 reviewer（含 bdd-reviewer、tdd-reviewer）+ 0–2 模范样本 matcher + arbiter 并行评审，含收敛规则与用户仲裁。
 > - 新增 `samples/` 模范样本库 + `managing-samples` SKILL（严格用户驱动，不会主动建议你保存样本）。
 > - 新增 `resume-brainstorming` / `resume-planning` SKILL，管理 `*-brainstorm.md` 与 `*-plan-progress.md` 决策文件。
 >
