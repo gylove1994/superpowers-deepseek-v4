@@ -45,7 +45,7 @@ Read `samples/plans/INDEX.md`. Semantically match the current task against each 
 - Select up to 2 most relevant samples.
 - Tell the user: "Selected sample(s) `<filenames>` as references because <reason>. Proceeding."
 - If the user objects, accept overrides.
-- If 0 samples, record it; the multi-reviewer subsystem runs with 4 reviewers only.
+- If 0 samples, record it; the multi-reviewer subsystem runs with 6 fixed reviewers (plus 0–2 exemplar-matchers).
 
 Load the chosen samples' full content into your context.
 
@@ -74,10 +74,46 @@ The plan must:
 
 - Use the `### Task N: <component>` structure for every task, with:
   - **Files:** list of files to Create / Modify / Delete (exact paths and line ranges where appropriate).
+  - **Acceptance Criteria:** (mandatory per task) at least one Gherkin Scenario block:
+    ```markdown
+    **Acceptance Criteria:**
+
+    Feature: <task-scoped feature>
+      Scenario: <verifiable outcome>
+        Given <precondition>
+        When <action>
+        Then <observable outcome>
+    ```
+    Outcome criteria here; TDD steps below describe process. Both required for tasks that modify files.
   - Numbered checkbox steps `- [ ] **Step N: <action>**`.
   - For TDD-able code tasks: failing test first, run-to-fail confirmation, minimal implementation, run-to-pass confirmation, commit. Each step is 2–5 minutes of work.
   - For prompt-template / skill-file tasks where TDD does not apply: a structure self-check step in lieu of test step (see Task 1.4 of THIS plan as a model).
   - For each commit step: exact `git add` + commit message with a heredoc.
+
+**Full normative task example (skill-only task):**
+
+```markdown
+- [ ] ### Task 2: Add bdd-reviewer dispatch to multi-reviewer SKILL
+
+**Files:**
+- Modify: `skills/multi-reviewer/SKILL.md`
+
+**Acceptance Criteria:**
+
+Feature: bdd-reviewer dispatch
+  Scenario: SKILL lists bdd-reviewer in fixed set
+    Given multi-reviewer SKILL.md on disk
+    When grep searches for bdd-reviewer in dispatch list
+    Then bdd-reviewer appears alongside architect and tdd-reviewer
+
+- [ ] **Step 1: Structure self-check** — confirm §1 lists exactly six fixed reviewers including bdd-reviewer and tdd-reviewer
+- [ ] **Step 2: Behavior-test** — dispatch multi-reviewer on fixture spec missing Acceptance Scenarios; expect bdd-reviewer BLOCKING in Round 1 decision-log
+- [ ] **Step 3: Edit SKILL.md** — add bdd-reviewer to §1 dispatch list per spec §A.3
+- [ ] **Step 4: Re-run behavior-test** — expect NO_BLOCKING_ISSUES from bdd-reviewer on compliant fixture
+- [ ] **Step 5: Commit** — `git add skills/multi-reviewer/SKILL.md && git commit -m "feat(multi-reviewer): dispatch bdd-reviewer"`
+```
+
+  - For skill/prompt tasks: structure self-check or behavior-test (no invented npm test). For code tasks: RED → run-to-fail → GREEN → run-to-pass. Mixed tasks: code steps first, skill verification second (spec §C.5).
 
 - **No placeholders.** No "TBD", "implement later", "similar to Task N", "add appropriate error handling". Every step contains the actual content the engineer needs.
 
