@@ -27,7 +27,7 @@ When the main flow agent needs to find matching samples for the current task:
 2. For each entry's metadata (`topic`, `domain`, `scale`, `characteristics`, `problem_summary`), semantically compare against the current user request.
 3. Select the most relevant samples; cap at 2.
 4. Report the choice to the user: "Selected X, Y as references because ...". Default to proceeding; user may override.
-5. If zero matches, proceed without samples. The `exemplar-matcher` reviewer is then not dispatched (only 4 reviewers participate instead of 5–6).
+5. If zero matches, proceed without samples. The `exemplar-matcher` reviewer is then not dispatched (6 fixed reviewers participate; total 6 instead of 7–8).
 
 ## Sample file format
 
