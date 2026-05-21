@@ -10,7 +10,7 @@ location: <section heading or quoted phrase from the draft>
 problem: <one-sentence problem statement>
 evidence: <why this is a problem — may quote the draft, cite the spec, cite an exemplar sample, or describe a failing scenario>
 suggestion: <minimal modification to fix it>
-reviewer_role: architect | red-team | edge-cases | yagni-gatekeeper | exemplar-matcher
+reviewer_role: architect | red-team | edge-cases | yagni-gatekeeper | exemplar-matcher | bdd-reviewer | tdd-reviewer
 ```
 
 **Every field is required.** Findings missing any field are discarded by the arbiter (`FALSE_DISCARDED`).
@@ -47,7 +47,7 @@ This explicit acknowledgement (rather than an empty response) is required so the
 
 ## Reviewer prompts must enforce
 
-The five reviewer prompt files (`reviewer-prompts/*.md`) each spell out:
+The seven reviewer prompt files (`reviewer-prompts/*.md`) each spell out:
 - The reviewer's role boundary (what it must look at; what it must not look at).
 - An explicit NIT cap of 3 per round.
 - The exact YAML output format above.
