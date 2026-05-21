@@ -1,6 +1,6 @@
 ---
 name: multi-reviewer
-description: Use to run a multi-round review loop on a spec or plan draft. Dispatches 4 fixed reviewers (architect, red-team, edge-cases, yagni-gatekeeper) plus up to 2 exemplar-matchers (one per matched sample), then an arbiter that filters and arbitrates. Loop converges, degenerates, or hits a 3-round ceiling.
+description: Use to run a multi-round review loop on a spec or plan draft. Dispatches 6 fixed reviewers (architect, red-team, edge-cases, yagni-gatekeeper, bdd-reviewer, tdd-reviewer) plus up to 2 exemplar-matchers (one per matched sample), then an arbiter that filters and arbitrates. Loop converges, degenerates, or hits a 3-round ceiling.
 ---
 
 # Multi-Reviewer Subsystem
@@ -29,8 +29,8 @@ Implements the pseudocode in `convergence-rules.md`. Each iteration:
 
 ### 1. Compute reviewer dispatch list
 
-- Always include: `architect`, `red-team`, `edge-cases`, `yagni-gatekeeper`.
-- Plus: one `exemplar-matcher` per matched sample (0, 1, or 2). Total reviewer count is 4, 5, or 6.
+- Always include: `architect`, `red-team`, `edge-cases`, `yagni-gatekeeper`, `bdd-reviewer`, `tdd-reviewer`.
+- Plus: one `exemplar-matcher` per matched sample (0, 1, or 2). Total reviewer count is 6, 7, or 8.
 
 ### 2. Update the decision-log / plan-progress file
 
@@ -47,19 +47,35 @@ Issue all N reviewer Task invocations in the same message batch. Each invocation
 - The current draft (full text).
 - The reviewer's `reviewer_role`.
 - For exemplar-matcher only: the assigned sample's filename + full content.
+- **document_type selection:** brainstorming Phase B → `spec-draft`; writing-plans → `plan-draft`. Invalid or missing enum → receipt ✗ failed (re-dispatch once, then exclude per §4).
+- Preamble for every reviewer: `document_type` as above.
+- For `bdd-reviewer` on plan-draft: include `source_spec_path` + full source spec text.
+- For `tdd-reviewer` on plan-draft: include `source_spec_path` + full source spec `## Testing Strategy` section text; if section absent, pass `testing_strategy_absent: true` and tdd-reviewer applies spec §C.1 BLOCKING against source spec.
+- Load prompts from `reviewer-prompts/bdd-reviewer.md` and `reviewer-prompts/tdd-reviewer.md`.
 
-### 4. Collect receipts
+### 4. Collect and validate receipts
 
-As each reviewer returns, update the receipt status in the file (`⏳ → ✓`) and append its raw findings (with `arbiter_status` initially blank) to the round's Findings table.
+For each reviewer output:
+1. Validate YAML finding-schema (all required fields; empty findings require `NO_BLOCKING_ISSUES: true`).
+2. If invalid, empty, non-YAML, or crash → re-dispatch once with format reminder.
+3. Second failure → mark receipt `✗ failed`, exclude from arbiter input, record in decision-log.
+4. Valid → mark `✓`.
+
+Record in Round N metadata: `dispatched_count`, `successful_receipt_count`, `excluded_roles`.
+
+If **all** reviewers failed: do not dispatch arbiter; mark round failed; surface to user.
+
+If any fixed reviewer role is in `excluded_roles`: arbiter must not return `STOP_CONVERGED` unless user-arbitration accepts partial round.
+
+As each reviewer returns, update the receipt status in the file (`⏳ → ✓` or `✗ failed`) and append its raw findings (with `arbiter_status` initially blank) to the round's Findings table.
 
 ### 5. Dispatch the arbiter
 
-Once all reviewers have returned, dispatch one arbiter subagent with:
-- The arbiter prompt from `arbiter-prompt.md`.
-- The full draft text.
-- The complete list of reviewer outputs.
-- `round` (current round number).
-- `prev_total` (from the previous round; `+infinity` if round 1).
+After receipt validation completes (not merely when subagents return):
+- Build `reviewer_outputs` from receipts marked ✓ only.
+- If `successful_receipt_count == 0`, skip arbiter; mark round failed in decision-log.
+- Dispatch arbiter with: draft, filtered reviewer_outputs, round, prev_total, and round_metadata `{ dispatched_count, successful_receipt_count, excluded_roles }`.
+- If any fixed reviewer is in `excluded_roles`, arbiter must not emit STOP_CONVERGED unless decision-log records explicit user acceptance of partial review.
 
 ### 6. Process arbiter output
 
@@ -103,3 +119,5 @@ After all unresolved findings have a user decision, either re-enter the loop (if
 - `./reviewer-prompts/edge-cases.md`
 - `./reviewer-prompts/yagni-gatekeeper.md`
 - `./reviewer-prompts/exemplar-matcher.md`
+- `./reviewer-prompts/bdd-reviewer.md`
+- `./reviewer-prompts/tdd-reviewer.md`
