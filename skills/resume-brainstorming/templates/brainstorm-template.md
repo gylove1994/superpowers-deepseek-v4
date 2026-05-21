@@ -44,11 +44,15 @@
 
 ## Phase B Review Progress
 
+> Spec drafts must include ## Acceptance Scenarios (Gherkin) after Design Principles.
+
 ### Round 1 [⏳ in progress / ✓ complete]
 
-**Dispatched reviewers (N):** architect | red-team | edge-cases | yagni-gatekeeper [| exemplar-matcher(sample-1) | exemplar-matcher(sample-2)]
+**Dispatched reviewers (N):** architect | red-team | edge-cases | yagni-gatekeeper | bdd-reviewer | tdd-reviewer [| exemplar-matcher(sample-1) | exemplar-matcher(sample-2)]
 
-**Receipt Status:** architect ⏳ | red-team ⏳ | edge-cases ⏳ | yagni-gatekeeper ⏳ [| exemplar-matcher(sample-1) ⏳ ...]
+**Receipt Status:** architect ⏳ | red-team ⏳ | edge-cases ⏳ | yagni-gatekeeper ⏳ | bdd-reviewer ⏳ | tdd-reviewer ⏳ [| exemplar-matcher(sample-1) ⏳ ...]  (states: ⏳ waiting | ✓ | ✗ failed)
+
+**Round metadata:** dispatched_count: | successful_receipt_count: | excluded_roles:
 
 **Findings:**
 
