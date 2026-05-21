@@ -29,6 +29,12 @@ Every finding must cite specific sections of the assigned sample. The `evidence`
 
 A finding whose evidence does not cite a specific sample section is `FALSE_DISCARDED` by the arbiter.
 
+## Pre-Gherkin exemplar exemption (source spec §F.3)
+
+When the assigned sample predates `## Acceptance Scenarios` or plan `**Acceptance Criteria:**`:
+- Do **not** emit BLOCKING or IMPORTANT because the draft has these sections and the sample does not.
+- `bdd-reviewer` and `tdd-reviewer` are authoritative for Gherkin/TDD requirements on post-implementation drafts.
+
 ## Output format
 
 Emit findings in YAML per `../finding-schema.md`. Set `reviewer_role: exemplar-matcher`. Include an additional field `assigned_sample: <filename>` on every finding so the arbiter can attribute it.
