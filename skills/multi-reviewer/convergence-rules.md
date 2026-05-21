@@ -25,15 +25,18 @@ LOOP:
   reviewer_outputs = parallel_dispatch(
     draft,
     samples_if_hit,  # 0–2 exemplar samples
-    fixed_reviewers={architect, red-team, edge-cases, yagni-gatekeeper},
+    fixed_reviewers={architect, red-team, edge-cases, yagni-gatekeeper, bdd-reviewer, tdd-reviewer},
     exemplar_matchers=one_per_sample
   )
 
+  reviewer_outputs = validate_receipts(raw_outputs)  # re-dispatch once; excluded_roles; ✓ only to arbiter
+  if successful_receipt_count == 0: round_failed; continue LOOP or abort
   arbiter_output = arbiter(
-    reviewer_outputs,
+    reviewer_outputs=successful_only,
     draft,
     round=ROUND,
-    prev_total=prev_total
+    prev_total=prev_total,
+    round_metadata={dispatched_count, successful_receipt_count, excluded_roles}
   )
 
   IF arbiter_output.convergence_status == STOP_CONVERGED:
@@ -64,7 +67,13 @@ Tuning: 0.5 is the chosen threshold (50% reduction required per round). It is no
 
 ## Hard ceiling
 
-After round 3, even if degradation is still passing, the loop stops with `STOP_LIMIT`. Three rounds × five-ish reviewers is the cost budget; further rounds rarely yield meaningful changes.
+After round 3, even if degradation is still passing, the loop stops with `STOP_LIMIT`. Three rounds × six-to-eight parallel reviewers is the cost budget; further rounds rarely yield meaningful changes.
+
+## STOP_CONVERGED guards
+
+- If `successful_receipt_count == 0` for a round, do not call arbiter; round status = failed.
+- If any fixed reviewer role is in `excluded_roles` for this round, arbiter must not emit `STOP_CONVERGED` unless the decision-log records explicit user acceptance of partial review.
+- Invalid `document_type` → receipt ✗ failed; re-dispatch once with valid enum; second failure → exclude per malformed path.
 
 ## User arbitration handoff
 
