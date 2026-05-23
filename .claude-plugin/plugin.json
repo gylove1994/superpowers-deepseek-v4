@@ -1,7 +1,7 @@
 {
   "name": "superpowers-deepseek-v4",
   "description": "Superpowers DeepSeek v4: composable agent skills for TDD, debugging, and collaboration. Independently maintained; not identical to obra/superpowers.",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "author": {
     "name": "gylove1994",
     "email": "gylove1994@acgsteps.com",

@@ -7,8 +7,35 @@ description: Use when starting any conversation - establishes how to find and us
 If you were dispatched as a subagent to execute a specific task, skip this skill.
 </SUBAGENT-STOP>
 
+<VERSION-CHANGELOG>
+
+## 5.1.1 (2026-05-23)
+
+**Plugin version bump** — enables `claude plugin update` / marketplace reinstall when the install cache lags behind git (same semver `5.1.0` did not trigger updates).
+
+**Spec & plan workflow**
+
+- Spec and plan pipelines now include **independent TDD and BDD review** tracks (design: `docs/superpowers/specs/2026-05-21-spec-plan-tdd-bdd-review-design.md`).
+- **`brainstorming`**: specs must include **Acceptance Scenarios** before Phase B multi-reviewer.
+- **`writing-plans`**: each task must include **Gherkin Acceptance Criteria**.
+
+**`multi-reviewer` subsystem (4 → 6 fixed reviewers)**
+
+- New fixed reviewers: **`bdd-reviewer`**, **`tdd-reviewer`** (alongside architect, red-team, edge-cases, yagni-gatekeeper).
+- **`finding-schema`**, **`convergence-rules`**, and **`arbiter-prompt`** updated for six-reviewer dispatch, BDD/TDD precedence, partial-round guard, and receipt validation.
+- **`exemplar-matcher`**: pre-Gherkin exemption when ACs are not yet written.
+
+**Templates & docs**
+
+- Brainstorm / plan-progress templates: six-reviewer dispatch and round metadata slots.
+- `samples/README.md`: reviewer count aligned to six fixed reviewers.
+
+**Unchanged from 5.1.0 → 5.1.1**: TDD, debugging, subagent-driven-development, git-worktrees, and other non-spec/plan SKILLs (still byte-identical to upstream `obra/superpowers` 5.1.0 where applicable).
+
+</VERSION-CHANGELOG>
+
 <FORK-NOTICE>
-**You are running `superpowers-deepseek-v4`, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.**
+**You are running `superpowers-deepseek-v4` 5.1.1, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.**
 
 This fork is NOT a drop-in replacement of upstream. Several core SKILLs have been refactored and new SKILLs have been added. Adapt your workflow accordingly.
 
@@ -41,8 +68,9 @@ The very first time you invoke `using-superpowers` in a session, you MUST emit O
 The announcement MUST:
 
 - Be written **in the user's language** (match the language they used in their first message; default English if unclear).
-- State that the running instance is `superpowers-deepseek-v4`, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.
-- List the key behavioral differences the user will notice in practice: brainstorming is two-phase with mandatory Step 0 `resume-brainstorming`; writing-plans has mandatory Step 0 `resume-planning` + source-spec selection; reviews now run through the parallel multi-reviewer subsystem; new exemplar samples library is consulted before drafting; `managing-samples` is strictly user-driven.
+- State that the running instance is `superpowers-deepseek-v4` 5.1.1, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.
+- List the key behavioral differences the user will notice in practice: brainstorming is two-phase with mandatory Step 0 `resume-brainstorming`; writing-plans has mandatory Step 0 `resume-planning` + source-spec selection; reviews now run through the parallel multi-reviewer subsystem (6 fixed reviewers since 5.1.1, including bdd/tdd); new exemplar samples library is consulted before drafting; `managing-samples` is strictly user-driven.
+- If the user asks what changed recently, summarize `<VERSION-CHANGELOG>` 5.1.1 (do not paste the full block).
 - Mention that all other SKILLs remain identical to upstream 5.1.0.
 - Be concise (≤ 8 lines / bullet points). Do NOT paste this entire FORK-NOTICE block.
 - Be emitted as its own message (or as the first lines of the first response), NOT buried inside tool calls or planning blocks.
@@ -51,12 +79,12 @@ After the announcement, proceed with the user's actual request following the nor
 
 **Suggested template (Chinese-speaking user):**
 
-> 提示：当前运行的是 `superpowers-deepseek-v4`（`obra/superpowers` 5.1.0 的 fork，针对 DeepSeek-V4-Pro 调优）。
+> 提示：当前运行的是 `superpowers-deepseek-v4` **5.1.1**（`obra/superpowers` 5.1.0 的 fork，针对 DeepSeek-V4-Pro 调优）。
 >
 > 与原版的关键差异：
-> - `brainstorming` 改为两阶段：Phase A 与你做对齐 Q&A，Phase B 由 agent 写 spec 并跑多评审 loop；Step 0 强制调用 `resume-brainstorming`。
-> - `writing-plans` 重写：Step 0 强制调用 `resume-planning` 并强制选择源 spec；进度记录到 `*-plan-progress.md`。
-> - 新增 `multi-reviewer` 子系统：6 固定 reviewer（含 bdd-reviewer、tdd-reviewer）+ 0–2 模范样本 matcher + arbiter 并行评审，含收敛规则与用户仲裁。
+> - `brainstorming` 改为两阶段：Phase A 与你做对齐 Q&A，Phase B 由 agent 写 spec 并跑多评审 loop；Step 0 强制调用 `resume-brainstorming`；spec 需含 Acceptance Scenarios（5.1.1+）。
+> - `writing-plans` 重写：Step 0 强制调用 `resume-planning` 并强制选择源 spec；进度记录到 `*-plan-progress.md`；每任务需 Gherkin AC（5.1.1+）。
+> - 新增 `multi-reviewer` 子系统：**6** 固定 reviewer（含 bdd-reviewer、tdd-reviewer，5.1.1 起）+ 0–2 模范样本 matcher + arbiter 并行评审，含收敛规则与用户仲裁。
 > - 新增 `samples/` 模范样本库 + `managing-samples` SKILL（严格用户驱动，不会主动建议你保存样本）。
 > - 新增 `resume-brainstorming` / `resume-planning` SKILL，管理 `*-brainstorm.md` 与 `*-plan-progress.md` 决策文件。
 >
