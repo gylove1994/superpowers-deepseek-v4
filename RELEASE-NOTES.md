@@ -2,6 +2,15 @@
 
 *Historical changelog carried in this repository for reference. For the current project positioning of **Superpowers DeepSeek v4**, see [README.md](README.md).*
 
+## v5.1.2 (2026-05-25)
+
+### Worktree Consent Gate Before Edits
+
+- **NEW SKILL `confirming-worktree-before-edit`** — session-level gate that asks once per session whether to open an isolated worktree before any file edit (project source, config, or skill documents). Records the user's choice and delegates setup to `using-git-worktrees` when accepted.
+- **`using-git-worktrees` consent deduplication** — honors the session record from confirming-worktree-before-edit; retains legacy direct-invoke consent fallback.
+- **Mainline edit skills wired** — test-driven-development, subagent-driven-development, executing-plans, systematic-debugging (Phase 4), dispatching-parallel-agents, receiving-code-review, writing-skills, using-superpowers bootstrap, and writing-plans execution handoff note.
+- **Gate test** — `tests/claude-code/test-worktree-consent-before-edit.sh` (RED/GREEN/PRESSURE/SKIP/ONCE phases).
+
 ## v5.1.0 (2026-04-30)
 
 ### Removals

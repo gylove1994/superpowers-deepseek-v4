@@ -21,6 +21,8 @@ Load plan, review critically, execute all tasks, report when complete.
 3. If concerns: Raise them with your human partner before starting
 4. If no concerns: Create TodoWrite and proceed
 
+**Before any file edit in this session:** Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
 ### Step 2: Execute Tasks
 
 For each task:
@@ -65,6 +67,7 @@ After all tasks complete and verified:
 ## Integration
 
 **Required workflow skills:**
-- **superpowers-deepseek-v4:using-git-worktrees** - Ensures isolated workspace (creates one or verifies existing)
+- **superpowers-deepseek-v4:confirming-worktree-before-edit** - Confirms worktree preference before first file edit in session
+- **superpowers-deepseek-v4:using-git-worktrees** - Ensures isolated workspace when user accepts worktree
 - **superpowers-deepseek-v4:writing-plans** - Creates the plan this skill executes
 - **superpowers-deepseek-v4:finishing-a-development-branch** - Complete development after all tasks

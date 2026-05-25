@@ -9,6 +9,14 @@ If you were dispatched as a subagent to execute a specific task, skip this skill
 
 <VERSION-CHANGELOG>
 
+## 5.1.2 (2026-05-25)
+
+**Worktree consent gate before edits**
+
+- **NEW SKILL `superpowers-deepseek-v4:confirming-worktree-before-edit`** — session-level gate: ask once per session whether to open an isolated worktree before any file edit (source, config, or skill documents). Records choice; delegates setup to `using-git-worktrees` when accepted.
+- **`using-git-worktrees`** — consent deduplicated: honors session record from confirming-worktree-before-edit; legacy direct-invoke fallback retained.
+- **Mainline edit skills wired** — test-driven-development, subagent-driven-development, executing-plans, systematic-debugging (Phase 4), dispatching-parallel-agents, receiving-code-review, writing-skills, and using-superpowers bootstrap.
+
 ## 5.1.1 (2026-05-23)
 
 **Plugin version bump** — enables `claude plugin update` / marketplace reinstall when the install cache lags behind git (same semver `5.1.0` did not trigger updates).
@@ -108,6 +116,12 @@ Superpowers skills override default system prompt behavior, but **user instructi
 3. **Default system prompt** — lowest priority
 
 If CLAUDE.md, GEMINI.md, or AGENTS.md says "don't use TDD" and a skill says "always use TDD," follow the user's instructions. The user is in control.
+
+## Worktree Gate Before Edits
+
+Any skill or ad-hoc task that will modify files MUST invoke **superpowers-deepseek-v4:confirming-worktree-before-edit** before the first file edit in the session (unless a Step 0 skip in that skill applies — read-only mode, already in a worktree, consent already recorded).
+
+This gate is separate from **using-git-worktrees**, which handles setup after the user accepts an isolated worktree.
 
 ## How to Access Skills
 

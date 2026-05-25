@@ -55,6 +55,8 @@ Group failures by what's broken:
 
 Each domain is independent - fixing tool approval doesn't affect abort tests.
 
+**Before any file edit in this session:** Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
 ### 2. Create Focused Agent Tasks
 
 Each agent gets:

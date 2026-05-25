@@ -97,7 +97,7 @@ Verify the resolved plugin URL points at this fork before relying on DeepSeek v4
 ## The Basic Workflow
 
 1. **brainstorming** — Before code: questions, alternatives, design in readable chunks; saves the design doc.
-2. **using-git-worktrees** — After design approval: isolated branch/workspace and clean test baseline.
+2. **confirming-worktree-before-edit** → **using-git-worktrees** — After design approval: confirm worktree preference once per session, then isolated branch/workspace and clean test baseline.
 3. **writing-plans** — Turns the approved design into small tasks with paths and verification.
 4. **subagent-driven-development** or **executing-plans** — Executes the plan with reviews or batch checkpoints.
 5. **test-driven-development** — RED–GREEN–REFACTOR; failures first, minimal code, then refactor.
@@ -114,7 +114,7 @@ The agent is expected to invoke relevant skills before and during work—this is
 
 **Debugging** — **systematic-debugging**, **verification-before-completion**
 
-**Collaboration** — **brainstorming**, **writing-plans**, **executing-plans**, **dispatching-parallel-agents**, **requesting-code-review**, **receiving-code-review**, **using-git-worktrees**, **finishing-a-development-branch**, **subagent-driven-development**
+**Collaboration** — **brainstorming**, **writing-plans**, **executing-plans**, **dispatching-parallel-agents**, **requesting-code-review**, **receiving-code-review**, **confirming-worktree-before-edit**, **using-git-worktrees**, **finishing-a-development-branch**, **subagent-driven-development**
 
 **Meta** — **writing-skills**, **using-superpowers**
 

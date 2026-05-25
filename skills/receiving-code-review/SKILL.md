@@ -11,6 +11,8 @@ Code review requires technical evaluation, not emotional performance.
 
 **Core principle:** Verify before implementing. Ask before assuming. Technical correctness over social comfort.
 
+**Before any file edit in this session:** Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
 ## The Response Pattern
 
 ```
@@ -65,6 +67,7 @@ You understand 1,2,3,6. Unclear on 4,5.
 - **Skip to action** or technical acknowledgment
 
 ### From External Reviewers
+
 ```
 BEFORE implementing:
   1. Check: Technically correct for THIS codebase?

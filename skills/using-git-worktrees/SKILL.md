@@ -11,6 +11,8 @@ Ensure work happens in an isolated workspace. Prefer your platform's native work
 
 **Core principle:** Detect existing isolation first. Then use native tools. Then fall back to git. Never fight the harness.
 
+**Integration:** When invoked from `confirming-worktree-before-edit`, do not re-ask for consent — the session record `worktree consent: asked, choice: yes|no` is authoritative.
+
 **Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
 
 ## Step 0: Detect Existing Isolation
@@ -38,11 +40,16 @@ Report with branch state:
 
 **If `GIT_DIR == GIT_COMMON` (or in a submodule):** You are in a normal repo checkout.
 
-Has the user already indicated their worktree preference in your instructions? If not, ask for consent before creating a worktree:
+**Consent check (do not duplicate asks):**
+
+1. If this session already has `worktree consent: asked, choice: yes` (from `confirming-worktree-before-edit`): proceed to Step 1 — do not ask again.
+2. If this session has `worktree consent: asked, choice: no`: work in place and skip to Step 3 — do not ask again.
+3. If the user already indicated worktree preference in instructions: honor it without asking.
+4. **Legacy fallback only** — if none of the above apply and you were invoked directly (not via confirming-worktree-before-edit), ask:
 
 > "Would you like me to set up an isolated worktree? It protects your current branch from changes."
 
-Honor any existing declared preference without asking. If the user declines consent, work in place and skip to Step 3.
+If the user declines, work in place and skip to Step 3.
 
 ## Step 1: Create Isolated Workspace
 
@@ -156,6 +163,7 @@ Ready to implement <feature-name>
 | Situation | Action |
 |-----------|--------|
 | Already in linked worktree | Skip creation (Step 0) |
+| Consent recorded (`worktree consent: asked`) | Skip ask; yes → Step 1, no → Step 3 |
 | In a submodule | Treat as normal repo (Step 0 guard) |
 | Native worktree tool available | Use it (Step 1a) |
 | No native tool | Git worktree fallback (Step 1b) |

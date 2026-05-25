@@ -174,6 +174,8 @@ Offer the user the execution choice (preserved from previous writing-plans behav
 - If Subagent-Driven → invoke `superpowers-deepseek-v4:subagent-driven-development`.
 - If Inline → invoke `superpowers-deepseek-v4:executing-plans`.
 
+Both execution paths run **confirming-worktree-before-edit** before the first source-file edit in the session.
+
 ## Abandonment
 
 Same as brainstorming abandonment: set `Status: Abandoned`, append `## Abandonment` block with timestamp and reason, commit.

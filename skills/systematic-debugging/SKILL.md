@@ -169,6 +169,8 @@ You MUST complete each phase before proceeding to the next.
 
 ### Phase 4: Implementation
 
+**Before any file edit in this session:** Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
 **Fix the root cause, not the symptom:**
 
 1. **Create Failing Test Case**

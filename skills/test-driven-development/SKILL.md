@@ -28,6 +28,12 @@ Write the test first. Watch it fail. Write minimal code to pass.
 
 Thinking "skip TDD just this once"? Stop. That's rationalization.
 
+<HARD-GATE>
+**Before any file edit in this session:** Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
+Do not write tests, production code, or any other file until the worktree gate completes (or a Step 0 skip applies).
+</HARD-GATE>
+
 ## The Iron Law
 
 ```
