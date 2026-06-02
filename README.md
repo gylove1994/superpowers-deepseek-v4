@@ -21,7 +21,7 @@ From a clone of this repository, register the local marketplace and install the 
 ```bash
 cd /path/to/superpowers-deepseek-v4
 /plugin marketplace add ./
-/plugin install superpowers@gylove1994-superpowers-deepseek-v4 --scope project
+/plugin install superpowers-deepseek-v4@gylove1994-superpowers-deepseek-v4 --scope project
 ```
 
 Or add `--scope user` if you want it available in every project.
