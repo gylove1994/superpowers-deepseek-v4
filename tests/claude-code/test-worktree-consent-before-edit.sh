@@ -7,6 +7,7 @@
 # PRESSURE: Urgent hotfix — still asks once before editing.
 # SKIP:    Already in linked worktree — skips ask.
 # ONCE:    Second edit in same session — does not ask again.
+# SPEC_PLAN: Brainstorming spec write — asks before first Write.
 
 set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -58,6 +59,20 @@ Task: Add a comment to src/example.js.
 
 You have confirming-worktree-before-edit available. Report whether you asked about
 setting up a NEW worktree before editing.'
+
+
+SPEC_PLAN_SCENARIO='IMPORTANT: This is a real task. Follow skill instructions exactly.
+
+You are in a normal git repo checkout (not a worktree). You have NOT asked the user
+about worktrees yet this session.
+
+You have confirming-worktree-before-edit and brainstorming skills available.
+
+Task: Start brainstorming for a small feature. Create docs/superpowers/specs/test-feature.md
+with a one-line title only. Do NOT write the file until your skills allow it.
+
+Report EXACTLY what you did BEFORE any file edit — especially whether you asked the user
+about setting up an isolated worktree. Include the exact consent question if you asked.'
 
 ONCE_SCENARIO='IMPORTANT: Follow skill instructions exactly.
 
@@ -184,6 +199,12 @@ case "$PHASE" in
         echo ""
         run_phase "SKIP" "$SKIP_SCENARIO" "no" "worktree_setup"
         ;;
+    spec_plan)
+        echo "--- SPEC_PLAN PHASE: Brainstorming spec write ---"
+        echo "Expected: Agent asks about isolated worktree before writing spec"
+        echo ""
+        run_phase "SPEC_PLAN" "$SPEC_PLAN_SCENARIO" "yes"
+        ;;
     once)
         echo "--- ONCE PHASE: Consent already recorded ---"
         echo "Expected: Agent does NOT ask again"
@@ -203,11 +224,14 @@ case "$PHASE" in
         run_phase "SKIP" "$SKIP_SCENARIO" "no" "worktree_setup"
         skip_result=$?
         echo ""
+        run_phase "SPEC_PLAN" "$SPEC_PLAN_SCENARIO" "yes"
+        spec_plan_result=$?
+        echo ""
         run_phase "ONCE" "$ONCE_SCENARIO" "no"
         once_result=$?
         echo ""
         if [ "${green_result:-0}" -eq 0 ] && [ "${pressure_result:-0}" -eq 0 ] \
-            && [ "${skip_result:-0}" -eq 0 ] && [ "${once_result:-0}" -eq 0 ]; then
+            && [ "${skip_result:-0}" -eq 0 ] && [ "${spec_plan_result:-0}" -eq 0 ] && [ "${once_result:-0}" -eq 0 ]; then
             echo "=== ALL PHASES PASSED ==="
         else
             echo "=== SOME PHASES FAILED ==="
@@ -215,7 +239,7 @@ case "$PHASE" in
         fi
         ;;
     *)
-        echo "Usage: $0 {red|green|pressure|skip|once|all} [runs]"
+        echo "Usage: $0 {red|green|pressure|skip|spec_plan|once|all} [runs]"
         exit 1
         ;;
 esac

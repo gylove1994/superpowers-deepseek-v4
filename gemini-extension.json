@@ -1,6 +1,6 @@
 {
   "name": "superpowers-deepseek-v4",
   "description": "Superpowers DeepSeek v4: TDD, debugging, collaboration skills. Independent of obra/superpowers.",
-  "version": "5.1.1",
+  "version": "5.1.3",
   "contextFileName": "GEMINI.md"
 }

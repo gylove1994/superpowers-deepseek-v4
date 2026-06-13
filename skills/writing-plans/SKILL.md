@@ -21,6 +21,12 @@ Always invoke `superpowers-deepseek-v4:resume-planning` first. It:
    - A path of an In Progress file to continue (option A)
    - A new file path (Based On a Done or Abandoned plan-progress) plus the prior file's content as context
 
+
+## Step 0.5: Worktree consent (before first file write)
+
+Before creating or modifying the plan-progress, plan, spec, or any other project file:
+Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
 ## Step 1: Initialize the plan-progress file
 
 Use `skills/resume-planning/templates/plan-progress-template.md` as the verbatim base. Fill the metadata header:
@@ -174,7 +180,7 @@ Offer the user the execution choice (preserved from previous writing-plans behav
 - If Subagent-Driven → invoke `superpowers-deepseek-v4:subagent-driven-development`.
 - If Inline → invoke `superpowers-deepseek-v4:executing-plans`.
 
-Both execution paths run **confirming-worktree-before-edit** before the first source-file edit in the session.
+If Step 0.5 already recorded worktree consent, do not ask again at execution handoff.
 
 ## Abandonment
 

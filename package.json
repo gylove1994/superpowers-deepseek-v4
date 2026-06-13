@@ -1,6 +1,6 @@
 {
   "name": "superpowers-deepseek-v4",
-  "version": "5.1.1",
+  "version": "5.1.3",
   "type": "module",
   "main": ".opencode/plugins/superpowers.js"
 }

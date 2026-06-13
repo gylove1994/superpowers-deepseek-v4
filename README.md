@@ -97,7 +97,7 @@ Verify the resolved plugin URL points at this fork before relying on DeepSeek v4
 ## The Basic Workflow
 
 1. **brainstorming** — Before code: questions, alternatives, design in readable chunks; saves the design doc.
-2. **confirming-worktree-before-edit** → **using-git-worktrees** — After design approval: confirm worktree preference once per session, then isolated branch/workspace and clean test baseline.
+2. **confirming-worktree-before-edit** → **using-git-worktrees** — Session bootstrap (before using-superpowers): confirm worktree preference once per session before any project file write (source, spec, plan, config), then isolated branch/workspace and clean test baseline when accepted.
 3. **writing-plans** — Turns the approved design into small tasks with paths and verification.
 4. **subagent-driven-development** or **executing-plans** — Executes the plan with reviews or batch checkpoints.
 5. **test-driven-development** — RED–GREEN–REFACTOR; failures first, minimal code, then refactor.

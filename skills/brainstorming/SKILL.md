@@ -25,6 +25,12 @@ Always invoke `superpowers-deepseek-v4:resume-brainstorming` first. It either:
 - Returns the path of an In Progress file to continue → skip to the matching point in the flow per the resume table.
 - Returns the path of a new file (Based On a Done or Abandoned file) plus prior-discussion context → continue to Step 1, but treat the prior content as established background instead of starting from zero.
 
+
+## Step 0.5: Worktree consent (before first file write)
+
+Before creating or modifying the decision-log, spec, or any other project file:
+Invoke superpowers-deepseek-v4:confirming-worktree-before-edit
+
 ## Step 1: Initialize the decision-log file
 
 Use `skills/resume-brainstorming/templates/brainstorm-template.md` as the verbatim base. Fill the metadata header:

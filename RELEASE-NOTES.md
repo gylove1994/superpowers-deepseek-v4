@@ -2,6 +2,16 @@
 
 *Historical changelog carried in this repository for reference. For the current project positioning of **Superpowers DeepSeek v4**, see [README.md](README.md).*
 
+## v5.1.3 (2026-06-13)
+
+### Worktree Gate Prepended + Spec/Plan Coverage
+
+- **`confirming-worktree-before-edit` prepended to session bootstrap** — injected before `using-superpowers` in session-start and GEMINI.md; gate priority #0 in skill discovery flow.
+- **All project file writes covered** — gate applies to spec, plan, brainstorm decision-log, and plan-progress files (not only source/config).
+- **`brainstorming` / `writing-plans` Step 0.5** — invoke confirming-worktree-before-edit before first file write in those workflows.
+- **Plan mode no longer blanket-skips** — only Ask/read-only contexts where edits are impossible skip the gate.
+- **SPEC_PLAN test phase** — added to `tests/claude-code/test-worktree-consent-before-edit.sh`.
+
 ## v5.1.2 (2026-05-25)
 
 ### Worktree Consent Gate Before Edits

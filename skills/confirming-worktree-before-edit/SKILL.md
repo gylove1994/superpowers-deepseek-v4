@@ -11,7 +11,14 @@ Before modifying any file in this session, confirm whether the user wants an iso
 
 **Core principle:** Ask once. Record the choice. Delegate setup. Never edit before the gate when consent is still unknown.
 
-**Scope:** All file edits — project source, configuration, skill documents, and any other writable path.
+**Scope:** All persistent writes to project files, including:
+
+- Project source, configuration, and skill documents
+- `docs/superpowers/specs/*.md`
+- `docs/superpowers/plans/*.md`
+- `docs/superpowers/brainstorms/*-brainstorm.md`
+- `docs/superpowers/brainstorms/*-plan-progress.md`
+- Any other writable path inside the project repository (including Cursor agent-mode drafts)
 
 **Announce at start:** "I'm using the confirming-worktree-before-edit skill to confirm worktree preference before editing."
 
@@ -19,7 +26,7 @@ Before modifying any file in this session, confirm whether the user wants an iso
 
 **Do NOT run this gate when any of these apply:**
 
-1. **Read-only mode** — Ask mode, Plan mode, or any context where you cannot edit files. Skip entirely.
+1. **Read-only mode** — Ask mode or any context where file edits are technically impossible (Write/StrReplace/ApplyPatch and equivalent tools unavailable). Skip entirely. Plan mode does **not** skip this gate when edits are possible.
 
 2. **Subagent dispatch** — If you were dispatched as a subagent (`<SUBAGENT-STOP>` in using-superpowers), skip. The **parent agent** must run this gate before dispatching you.
 
@@ -81,18 +88,18 @@ Work in the current directory. Proceed to Step 4 without creating a worktree.
 
 ## Step 4: Proceed
 
-Gate complete. Continue the calling skill's edit workflow (TDD, plan execution, debugging fix, etc.).
+Gate complete. Continue the calling skill's edit workflow (TDD, plan execution, spec writing, debugging fix, etc.).
 
 ## Quick Reference
 
 | Situation | Action |
 |-----------|--------|
-| Read-only / Ask / Plan mode | Skip gate |
+| Read-only / Ask mode (edits impossible) | Skip gate |
 | Subagent | Skip (parent runs gate) |
 | Already in linked worktree | Record skipped, proceed |
 | User rules declare preference | Honor + record, no ask |
 | Consent already recorded | Skip ask, proceed |
-| First edit, none of above | Ask exact question, record, execute |
+| First edit (spec/plan/source/config), none of above | Ask exact question, record, execute |
 | User says yes | Invoke using-git-worktrees |
 | User says no | Work in place |
 
@@ -100,7 +107,7 @@ Gate complete. Continue the calling skill's edit workflow (TDD, plan execution, 
 
 ### Editing before asking
 
-- **Problem:** Jump straight to StrReplace/Write because the task seems small
+- **Problem:** Jump straight to StrReplace/Write because the task seems small or "just a spec"
 - **Fix:** Step 1 is a hard stop before any file modification
 
 ### Asking twice
@@ -118,6 +125,11 @@ Gate complete. Continue the calling skill's edit workflow (TDD, plan execution, 
 - **Problem:** User opened `/worktree` or EnterWorktree; agent still asks
 - **Fix:** Step 0 detection + record skipped
 
+### Skipping gate for spec/plan writes
+
+- **Problem:** Agent writes brainstorm decision-log or plan-progress without asking
+- **Fix:** brainstorming and writing-plans Step 0.5 invoke this skill before first Write
+
 ## Red Flags
 
 **Never:**
@@ -126,6 +138,7 @@ Gate complete. Continue the calling skill's edit workflow (TDD, plan execution, 
 - Create a worktree without user consent
 - Use `git worktree add` when a native harness worktree tool exists (using-git-worktrees owns this)
 - Re-ask because the edit "feels urgent" (pressure does not bypass the gate)
+- Skip because the edit is "only a spec" or "only a plan document"
 
 **Always:**
 - Run Step 0 skip checks first
@@ -135,6 +148,6 @@ Gate complete. Continue the calling skill's edit workflow (TDD, plan execution, 
 
 ## Integration
 
-**Called by:** test-driven-development, subagent-driven-development, executing-plans, systematic-debugging (Phase 4), dispatching-parallel-agents, receiving-code-review, writing-skills, and using-superpowers (ad-hoc edits).
+**Called by:** session bootstrap (before using-superpowers), brainstorming (Step 0.5), writing-plans (Step 0.5), test-driven-development, subagent-driven-development, executing-plans, systematic-debugging (Phase 4), dispatching-parallel-agents, receiving-code-review, writing-skills, resume-brainstorming (abandonment edit), resume-planning (abandonment edit), and using-superpowers (ad-hoc edits).
 
 **Delegates to:** superpowers-deepseek-v4:using-git-worktrees (when user accepts)

@@ -9,6 +9,16 @@ If you were dispatched as a subagent to execute a specific task, skip this skill
 
 <VERSION-CHANGELOG>
 
+## 5.1.3 (2026-06-13)
+
+**Worktree gate prepended + spec/plan coverage**
+
+- **`confirming-worktree-before-edit` prepended to session bootstrap** — injected before `using-superpowers` in session-start and GEMINI.md; gate priority #0 in skill discovery.
+- **Spec/plan writes covered** — gate applies to all project file persistent writes including `docs/superpowers/specs/`, `plans/`, `brainstorms/*-brainstorm.md`, and `*-plan-progress.md`.
+- **`brainstorming` / `writing-plans` Step 0.5** — invoke confirming-worktree-before-edit before first file write.
+- **Plan mode no longer blanket-skips** — only Ask/read-only contexts where edits are impossible skip the gate.
+- **SPEC_PLAN test phase** — `tests/claude-code/test-worktree-consent-before-edit.sh`.
+
 ## 5.1.2 (2026-05-25)
 
 **Worktree consent gate before edits**
@@ -43,7 +53,7 @@ If you were dispatched as a subagent to execute a specific task, skip this skill
 </VERSION-CHANGELOG>
 
 <FORK-NOTICE>
-**You are running `superpowers-deepseek-v4` 5.1.1, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.**
+**You are running `superpowers-deepseek-v4` 5.1.3, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.**
 
 This fork is NOT a drop-in replacement of upstream. Several core SKILLs have been refactored and new SKILLs have been added. Adapt your workflow accordingly.
 
@@ -76,9 +86,9 @@ The very first time you invoke `using-superpowers` in a session, you MUST emit O
 The announcement MUST:
 
 - Be written **in the user's language** (match the language they used in their first message; default English if unclear).
-- State that the running instance is `superpowers-deepseek-v4` 5.1.1, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.
+- State that the running instance is `superpowers-deepseek-v4` 5.1.3, a fork of `obra/superpowers` 5.1.0 tuned for DeepSeek-V4-Pro.
 - List the key behavioral differences the user will notice in practice: brainstorming is two-phase with mandatory Step 0 `resume-brainstorming`; writing-plans has mandatory Step 0 `resume-planning` + source-spec selection; reviews now run through the parallel multi-reviewer subsystem (6 fixed reviewers since 5.1.1, including bdd/tdd); new exemplar samples library is consulted before drafting; `managing-samples` is strictly user-driven.
-- If the user asks what changed recently, summarize `<VERSION-CHANGELOG>` 5.1.1 (do not paste the full block).
+- If the user asks what changed recently, summarize `<VERSION-CHANGELOG>` 5.1.3 (do not paste the full block).
 - Mention that all other SKILLs remain identical to upstream 5.1.0.
 - Be concise (≤ 8 lines / bullet points). Do NOT paste this entire FORK-NOTICE block.
 - Be emitted as its own message (or as the first lines of the first response), NOT buried inside tool calls or planning blocks.
@@ -87,7 +97,7 @@ After the announcement, proceed with the user's actual request following the nor
 
 **Suggested template (Chinese-speaking user):**
 
-> 提示：当前运行的是 `superpowers-deepseek-v4` **5.1.1**（`obra/superpowers` 5.1.0 的 fork，针对 DeepSeek-V4-Pro 调优）。
+> 提示：当前运行的是 `superpowers-deepseek-v4` **5.1.3**（`obra/superpowers` 5.1.0 的 fork，针对 DeepSeek-V4-Pro 调优）。
 >
 > 与原版的关键差异：
 > - `brainstorming` 改为两阶段：Phase A 与你做对齐 Q&A，Phase B 由 agent 写 spec 并跑多评审 loop；Step 0 强制调用 `resume-brainstorming`；spec 需含 Acceptance Scenarios（5.1.1+）。
@@ -98,6 +108,16 @@ After the announcement, proceed with the user's actual request following the nor
 >
 > 其他所有 SKILL 与上游 5.1.0 字节一致。
 </FORK-NOTICE>
+
+## Worktree Gate Before Edits
+
+This gate has **priority #0** — before skill discovery and before any project file write.
+
+Any skill or ad-hoc task that will persistently modify project files MUST invoke **superpowers-deepseek-v4:confirming-worktree-before-edit** before the first file edit in the session (unless a Step 0 skip in that skill applies — Ask/read-only mode where edits are impossible, already in a worktree, consent already recorded).
+
+Coverage includes source code, config, skill documents, spec files, plan files, brainstorm decision logs, and plan-progress files.
+
+This gate is separate from **using-git-worktrees**, which handles setup after the user accepts an isolated worktree.
 
 <EXTREMELY-IMPORTANT>
 If you think there is even a 1% chance a skill might apply to what you are doing, you ABSOLUTELY MUST invoke the skill.
@@ -116,12 +136,6 @@ Superpowers skills override default system prompt behavior, but **user instructi
 3. **Default system prompt** — lowest priority
 
 If CLAUDE.md, GEMINI.md, or AGENTS.md says "don't use TDD" and a skill says "always use TDD," follow the user's instructions. The user is in control.
-
-## Worktree Gate Before Edits
-
-Any skill or ad-hoc task that will modify files MUST invoke **superpowers-deepseek-v4:confirming-worktree-before-edit** before the first file edit in the session (unless a Step 0 skip in that skill applies — read-only mode, already in a worktree, consent already recorded).
-
-This gate is separate from **using-git-worktrees**, which handles setup after the user accepts an isolated worktree.
 
 ## How to Access Skills
 
@@ -146,6 +160,8 @@ Skills use Claude Code tool names. Non-CC platforms: see `references/copilot-too
 ```dot
 digraph skill_flow {
     "User message received" [shape=doublecircle];
+    "About to write project file?" [shape=diamond];
+    "Invoke confirming-worktree-before-edit" [shape=box];
     "About to EnterPlanMode?" [shape=doublecircle];
     "Already brainstormed?" [shape=diamond];
     "Invoke brainstorming skill" [shape=box];
@@ -157,12 +173,16 @@ digraph skill_flow {
     "Follow skill exactly" [shape=box];
     "Respond (including clarifications)" [shape=doublecircle];
 
+    "User message received" -> "About to write project file?";
+    "About to write project file?" -> "Invoke confirming-worktree-before-edit" [label="yes, consent unknown"];
+    "About to write project file?" -> "Might any skill apply?" [label="no or consent recorded"];
+    "Invoke confirming-worktree-before-edit" -> "Might any skill apply?";
+
     "About to EnterPlanMode?" -> "Already brainstormed?";
     "Already brainstormed?" -> "Invoke brainstorming skill" [label="no"];
     "Already brainstormed?" -> "Might any skill apply?" [label="yes"];
     "Invoke brainstorming skill" -> "Might any skill apply?";
 
-    "User message received" -> "Might any skill apply?";
     "Might any skill apply?" -> "Invoke Skill tool" [label="yes, even 1%"];
     "Might any skill apply?" -> "Respond (including clarifications)" [label="definitely not"];
     "Invoke Skill tool" -> "Announce: 'Using [skill] to [purpose]'";
@@ -196,8 +216,9 @@ These thoughts mean STOP—you're rationalizing:
 
 When multiple skills could apply, use this order:
 
-1. **Process skills first** (brainstorming, debugging) - these determine HOW to approach the task
-2. **Implementation skills second** (frontend-design, mcp-builder) - these guide execution
+0. **Session gate first** (`confirming-worktree-before-edit`) — before any project file write when consent is not yet recorded
+1. **Process skills second** (brainstorming, debugging) - these determine HOW to approach the task
+2. **Implementation skills third** (frontend-design, mcp-builder) - these guide execution
 
 "Let's build X" → brainstorming first, then implementation skills.
 "Fix this bug" → debugging first, then domain-specific skills.

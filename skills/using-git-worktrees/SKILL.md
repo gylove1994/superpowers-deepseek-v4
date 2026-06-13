@@ -11,7 +11,7 @@ Ensure work happens in an isolated workspace. Prefer your platform's native work
 
 **Core principle:** Detect existing isolation first. Then use native tools. Then fall back to git. Never fight the harness.
 
-**Integration:** When invoked from `confirming-worktree-before-edit`, do not re-ask for consent — the session record `worktree consent: asked, choice: yes|no` is authoritative.
+**Integration:** When invoked from `confirming-worktree-before-edit`, do not re-ask for consent — the session record `worktree consent: asked, choice: yes|no` is authoritative. The gate also covers spec/plan/brainstorm/plan-progress document writes (brainstorming and writing-plans Step 0.5).
 
 **Announce at start:** "I'm using the using-git-worktrees skill to set up an isolated workspace."
 
