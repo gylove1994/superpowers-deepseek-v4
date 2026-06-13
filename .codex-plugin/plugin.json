@@ -1,6 +1,6 @@
 {
   "name": "superpowers-deepseek-v4",
-  "version": "5.1.1",
+  "version": "5.1.3",
   "description": "Superpowers DeepSeek v4: planning, TDD, debugging, and collaboration workflows for coding agents. Independently maintained; not identical to obra/superpowers.",
   "author": {
     "name": "gylove1994",
